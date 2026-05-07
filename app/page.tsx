@@ -6,23 +6,67 @@ export default function Home() {
   const groups = getByCategory();
   return (
     <div className="space-y-14">
-      <section className="fade-up max-w-[820px] space-y-5 pb-2">
-        <p className="font-mono text-[12px] uppercase tracking-wide text-accent">
+      <section className="fade-up max-w-[860px] space-y-5 pb-2">
+        <p className="font-mono text-[11.5px] uppercase tracking-[0.08em] text-accent">
           $ joshua chua · ai engineer
         </p>
-        <h1 className="text-[32px] font-medium leading-[1.1] tracking-tight text-foreground sm:text-[44px] lg:text-[52px]">
-          Production Claude-powered systems —
-          <br />
+        <h1 className="text-[24px] font-medium leading-[1.2] tracking-tight text-foreground sm:text-[30px] lg:text-[36px]">
+          Production AI systems —{" "}
           <span className="text-foreground/55">
             chiefs of staff, correction pipelines, scoring engines.
           </span>
           <TerminalCursor />
         </h1>
-        <p className="max-w-[60ch] text-[15px] leading-[1.65] text-foreground/65 sm:text-[16px]">
+        <p className="max-w-[62ch] text-[14.5px] leading-[1.65] text-foreground/65 sm:text-[15.5px]">
           Each project below ships with a clickable demo and a process flow
           showing where the model fits. Click into any one — they&apos;re
           mockups, but they show the real architecture.
         </p>
+
+        <div className="space-y-2 pt-3 font-mono text-[11.5px]">
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span className="shrink-0 text-accent">› models</span>
+            {[
+              "anthropic claude",
+              "openai gpt",
+              "gemini",
+              "llama",
+              "nemotron",
+              "kimi",
+              "deepseek",
+              "gemma 3",
+              "ibm bob",
+            ].map((m, i, arr) => (
+              <span key={m} className="text-foreground/75">
+                {m}
+                {i < arr.length - 1 && (
+                  <span className="px-1.5 text-muted">·</span>
+                )}
+              </span>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span className="shrink-0 text-accent">› tools</span>
+            {[
+              "claude code",
+              "claude skills",
+              "mcp",
+              "ollama",
+              "n8n",
+              "supabase",
+              "railway",
+              "obsidian",
+              "godot",
+            ].map((t, i, arr) => (
+              <span key={t} className="text-foreground/75">
+                {t}
+                {i < arr.length - 1 && (
+                  <span className="px-1.5 text-muted">·</span>
+                )}
+              </span>
+            ))}
+          </div>
+        </div>
       </section>
 
       <div id="projects" className="space-y-12">

@@ -14,7 +14,7 @@ const STATUS_LABEL: Record<Project["status"], string> = {
   active: "active",
   shipped: "shipped",
   prototype: "prototype",
-  concept: "concept",
+  concept: "currently building",
 };
 
 export function ProjectCard({ project }: { project: Project }) {

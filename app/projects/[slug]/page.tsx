@@ -35,7 +35,7 @@ const STATUS_LABEL: Record<string, string> = {
   live: "live",
   active: "active",
   shipped: "shipped",
-  concept: "concept",
+  concept: "currently building",
   prototype: "prototype",
 };
 

@@ -1,33 +1,42 @@
 ## what it is
 
-A health tracker built around a single observation: people don&apos;t log meals because typing them is annoying. Vital flips that — you point your phone camera at what you&apos;re about to eat, Claude vision identifies it, estimates macros, and writes the log. Same for gym sessions and weight.
+A personal health database connected to the same Vault that powers VANTAGE. Vital handles the four logging surfaces every fitness tracker handles — meals, gym sessions, daily activity, weight — and adds a Claude layer on top that turns the data into narrative reviews, trend analysis, and next-workout suggestions.
 
-The data feeds into VANTAGE so the chief-of-staff bot can include health context in its nightly digests without me ever opening another app.
+The data lives in Supabase. A sync job mirrors the structured logs into the Vault, so Claude has health context in any other conversation — not just inside the Vital app.
 
-## the AI architecture
+## the four logging surfaces
 
-Claude vision does the heavy lift. The interesting design is keeping the model from over-claiming on identification confidence:
+- **meal log** — point the camera at the plate, Claude vision identifies ingredients, estimates macros. Low-confidence items surface as one-tap checkboxes the user can correct.
+- **workout log** — voice input is the primary interface. &quot;four sets of squats, 80kg, 8 reps, last set was rough&quot; → Claude Sonnet parses to structured exercise + load + reps + RPE.
+- **activity** — passive: steps, heart-rate zones, active minutes pulled from the OS health APIs. No manual entry required.
+- **weight + body comp** — manual once-a-week, with a single Claude-generated note prompting the user to log mood/sleep alongside.
 
-- the prompt requires a confidence score per identified ingredient
-- low-confidence items surface in the UI as &quot;is this right?&quot; checkboxes the user can fix in one tap
-- macros are estimated from the corrected ingredient list, not the raw vision output
+## the AI layer
 
-This matters because food photos under-determine macros badly. Two grams of oil can change calorie count by 10%. The model doesn&apos;t pretend it can see oil — it asks.
+Three jobs:
+
+**weekly review.** Every Sunday, Claude pulls the trailing seven days of logs and writes a one-paragraph review: surplus or deficit, training volume vs the prior week, what changed, what to keep an eye on. Same citation discipline as the BPS Generator — every claim references a specific log entry.
+
+**next-workout suggester.** Reads the user&apos;s training history (sessions, exercises, loads, RPE), models fatigue and recovery, suggests a session for today with rationale. The user can accept, modify, or skip; the response feeds back into the model&apos;s next suggestion.
+
+**vault digest.** A nightly job pushes a structured summary to the Vault. So when I&apos;m chatting with VANTAGE about something completely unrelated and the conversation touches on energy or focus, the bot already knows I undertrained this week and slept poorly twice. The context flows without the user re-typing it.
 
 ## why this and not another macro tracker
 
-Three reasons the existing apps are wrong:
+Three reasons existing apps are wrong:
 
 1. they make you type or scan barcodes; that friction is why people quit by week three
 2. they don&apos;t connect to anything else in your life — your phone tracker is a silo
 3. they don&apos;t use the data for anything beyond a daily total — no narrative review, no compounding context
 
-Vital fixes all three. Claude vision kills the typing. Supabase shared with VANTAGE kills the silo. A weekly Claude-narrated review (&quot;you ate cleaner this week than last; protein up 22%; the sunday brunch is your repeat carb spike&quot;) is the compounding context.
+Vital fixes all three. Claude vision kills the typing on meals, voice kills the typing on workouts. Vault sync kills the silo. The weekly review and workout suggester turn the data into something that compounds.
 
 ## status
 
-Concept. Has a working photo → vision → macros prototype on web. Mobile build is the next phase, alongside the supabase schema design.
+Concept / currently building. Working photo → vision → macros prototype on web. Mobile build is next, alongside the Supabase schema and Vault sync.
 
 ## what i learned
 
 The right way to evaluate a vision-driven product isn&apos;t accuracy on a benchmark. It&apos;s the friction-to-log curve. If logging takes 4 seconds, people log; if it takes 40, they don&apos;t. The model&apos;s job is to win the friction war, even at the cost of some accuracy that the user can correct in the next two seconds anyway.
+
+The sync-to-Vault pattern generalizes. Anything I track on a phone — health, finances, sleep, reading — is more useful when the bot can read it without me copying it. The phone app is the capture surface; the Vault is the long-term memory; Claude is the layer that connects them.
