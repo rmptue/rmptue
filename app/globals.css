@@ -65,9 +65,5 @@ code, pre, .font-mono {
   animation: fade-up 0.5s ease-out both;
 }
 
-/* subtle ambient glow on hero */
-.ambient-glow {
-  background:
-    radial-gradient(ellipse at 20% 0%, rgba(95, 217, 232, 0.08), transparent 50%),
-    radial-gradient(ellipse at 80% 0%, rgba(95, 217, 232, 0.04), transparent 60%);
-}
+/* solid background — no gradients (legibility > flair) */
+.ambient-glow { background: var(--background); }

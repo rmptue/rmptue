@@ -36,21 +36,21 @@ export default function AboutPage() {
           <li>
             <span className="text-muted">email </span>
             <a
-              href="mailto:hello@joshuachua.dev"
+              href="mailto:chuajoshuaalto@gmail.com"
               className="text-accent underline-offset-4 hover:underline"
             >
-              hello@joshuachua.dev
+              chuajoshuaalto@gmail.com
             </a>
           </li>
           <li>
             <span className="text-muted">linkedin </span>
             <a
-              href="https://linkedin.com/in/joshuachua"
+              href="https://www.linkedin.com/in/jachua3/"
               target="_blank"
               rel="noreferrer"
               className="text-accent underline-offset-4 hover:underline"
             >
-              /in/joshuachua
+              /in/jachua3
             </a>
           </li>
           <li>

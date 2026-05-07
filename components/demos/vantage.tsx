@@ -12,7 +12,7 @@ const SCRIPTS: Record<Command, Msg[]> = {
     {
       from: "bot",
       text:
-        "morning brief · 7:00am\n\n— BTC 67,200 (+1.4%) · ETH 3,480 (-0.6%)\n— AI: Anthropic ships Claude Skills GA · OpenAI internal memo on agent tooling leaks\n— Climate: PH BBB submission window opens; CCET v2 spec dropped\n— Personal: Job Radar surfaced 3 new high-fit roles overnight",
+        "morning brief · 7:00am\n\n— BTC 67,200 (+1.4%) · ETH 3,480 (-0.6%)\n— AI: Anthropic ships Claude Skills GA · OpenAI internal memo on agent tooling leaks\n— Climate: COP31 prep dispatch · PH BBB submission window opens\n— Builds: 2 phases shipped overnight; freedom park 0.5b unblocked",
     },
   ],
   "!ask": [
@@ -32,11 +32,11 @@ const SCRIPTS: Record<Command, Msg[]> = {
     },
   ],
   "!remind": [
-    { from: "you", text: "!remind me thursday 9am: review mrv brief draft" },
+    { from: "you", text: "!remind me thursday 9am: ship portfolio v4" },
     {
       from: "bot",
       text:
-        "scheduled · thursday 2026-05-15 · 9:00am\n\nwill ping in #personal with: 'review mrv brief draft' plus the latest version pulled from consultancy/mrv-research/draft-v0.2.md",
+        "scheduled · thursday 2026-05-15 · 9:00am\n\nwill ping in #personal with: 'ship portfolio v4' plus a checklist drawn from builds/_index.md.",
     },
   ],
 };

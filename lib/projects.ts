@@ -262,7 +262,7 @@ export const projects: Project[] = [
       "Solo cozy college-life pixel-art sim. Claude is design partner, Gemini paints backgrounds, Aseprite handles revisions — an AI-collaborative asset pipeline.",
     role: "Solo dev",
     year: "2026",
-    stack: ["Godot 4", "GDScript", "Claude Sonnet", "Gemini", "Aseprite"],
+    stack: ["Godot 4", "GDScript", "Claude Sonnet", "Gemini", "Pixellab AI", "Aseprite"],
     ai_components: [
       "Claude for design, dialogue, GDScript scaffolding",
       "Gemini for painted isometric backgrounds",
@@ -286,7 +286,6 @@ export const projects: Project[] = [
       "Claude Code for ETL scaffolding from raw DBM CCET tables",
       "Claude for chart-narration drafts surfaced alongside each view",
     ],
-    links: [{ label: "altographanalytics.com", href: "https://altographanalytics.com" }],
     featured: true,
     order: 14,
   },

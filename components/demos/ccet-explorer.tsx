@@ -40,11 +40,12 @@ const NARRATIONS: Record<View, string> = {
 
 export default function CCETExplorerDemo() {
   const [view, setView] = useState<View>("agency");
+  const yMax = 800;
 
   return (
     <>
       <Mockup title="ccet explorer v0.1 · PH national climate budget">
-        <div className="mb-3 flex gap-1 text-[11px]">
+        <div className="mb-4 flex flex-wrap items-center gap-1 text-[12px]">
           <span className="mr-2 self-center text-muted">view:</span>
           {VIEWS.map((v) => (
             <button
@@ -64,11 +65,11 @@ export default function CCETExplorerDemo() {
         {view === "agency" && (
           <div className="space-y-1.5">
             {AGENCY_DATA.map((r) => (
-              <div key={r.name} className="flex items-center gap-2 text-[12px]">
+              <div key={r.name} className="flex items-center gap-2 text-[12.5px]">
                 <span className="w-44 truncate text-foreground/85">{r.name}</span>
                 <div className="flex-1 overflow-hidden rounded bg-border/30">
                   <div
-                    className="h-2 bg-accent/60"
+                    className="h-2.5 bg-accent/60"
                     style={{ width: `${r.v}%` }}
                   />
                 </div>
@@ -83,7 +84,7 @@ export default function CCETExplorerDemo() {
         {view === "strategy" && (
           <div className="space-y-2">
             {STRATEGY_DATA.map((r) => (
-              <div key={r.name} className="flex items-center gap-2 text-[12px]">
+              <div key={r.name} className="flex items-center gap-2 text-[12.5px]">
                 <span className="w-32 text-foreground/85">{r.name}</span>
                 <div className="flex-1 overflow-hidden rounded bg-border/30">
                   <div
@@ -100,62 +101,66 @@ export default function CCETExplorerDemo() {
         )}
 
         {view === "year-over-year" && (
-          <svg viewBox="0 0 320 130" className="w-full">
-            <polyline
-              fill="none"
-              stroke="#5fd9e8"
-              strokeWidth="2"
-              points={YOY_DATA.map(
-                (d, i) =>
-                  `${(i / (YOY_DATA.length - 1)) * 300 + 10},${110 - (d.c / 800) * 90}`,
-              ).join(" ")}
-            />
-            {YOY_DATA.map((d, i) => (
-              <g key={d.y}>
-                <circle
-                  cx={(i / (YOY_DATA.length - 1)) * 300 + 10}
-                  cy={110 - (d.c / 800) * 90}
-                  r="3"
-                  fill="#5fd9e8"
-                />
-                <text
-                  x={(i / (YOY_DATA.length - 1)) * 300 + 10}
-                  y="125"
-                  textAnchor="middle"
-                  className="fill-muted"
-                  fontSize="9"
-                >
-                  {d.y}
-                </text>
-                <text
-                  x={(i / (YOY_DATA.length - 1)) * 300 + 10}
-                  y={104 - (d.c / 800) * 90}
-                  textAnchor="middle"
-                  className="fill-foreground"
-                  fontSize="9"
-                >
-                  ₱{d.c}B
-                </text>
-              </g>
-            ))}
-          </svg>
+          <div className="relative h-[180px] w-full">
+            <svg
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              className="absolute inset-0 h-full w-full"
+            >
+              <polyline
+                fill="none"
+                stroke="#5fd9e8"
+                strokeWidth="0.6"
+                vectorEffect="non-scaling-stroke"
+                points={YOY_DATA.map(
+                  (d, i) =>
+                    `${(i / (YOY_DATA.length - 1)) * 96 + 2},${100 - (d.c / yMax) * 80 - 5}`,
+                ).join(" ")}
+              />
+              {YOY_DATA.map((d, i) => {
+                const cx = (i / (YOY_DATA.length - 1)) * 96 + 2;
+                const cy = 100 - (d.c / yMax) * 80 - 5;
+                return (
+                  <circle
+                    key={d.y}
+                    cx={cx}
+                    cy={cy}
+                    r="0.9"
+                    fill="#5fd9e8"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                );
+              })}
+            </svg>
+            {YOY_DATA.map((d, i) => {
+              const xPct = (i / (YOY_DATA.length - 1)) * 96 + 2;
+              const yPct = 100 - (d.c / yMax) * 80 - 5;
+              return (
+                <div key={d.y}>
+                  <span
+                    className="absolute -translate-x-1/2 -translate-y-full pb-1.5 font-mono text-[10.5px] text-foreground"
+                    style={{ left: `${xPct}%`, top: `${yPct}%` }}
+                  >
+                    ₱{d.c}B
+                  </span>
+                  <span
+                    className="absolute -translate-x-1/2 pt-2 font-mono text-[10.5px] text-muted"
+                    style={{ left: `${xPct}%`, bottom: 0 }}
+                  >
+                    {d.y}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         )}
 
-        <div className="mt-4 rounded border border-accent/30 bg-accent/5 p-3 text-[11.5px] leading-[1.6] text-accent/90">
-          <div className="mb-1 text-[10.5px] uppercase tracking-wide text-accent/70">
+        <div className="mt-4 rounded border border-accent/30 bg-accent/5 p-3 text-[12px] leading-[1.6] text-accent/90">
+          <div className="mb-1 font-mono text-[10.5px] uppercase tracking-wide text-accent/70">
             claude narration
           </div>
           {NARRATIONS[view]}
         </div>
-
-        <a
-          href="https://altographanalytics.com"
-          target="_blank"
-          rel="noreferrer"
-          className="mt-3 inline-block rounded border border-accent/40 bg-accent/10 px-3 py-1.5 text-[12px] text-accent hover:bg-accent/20"
-        >
-          open the live explorer ↗
-        </a>
       </Mockup>
       <Flow
         nodes={[

@@ -50,8 +50,8 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
       <body className="flex min-h-full flex-col ambient-glow">
-        <div className="mx-auto flex w-full max-w-[1080px] flex-1 flex-col px-5 py-8 sm:px-8 sm:py-12">
-          <header className="mb-12 flex items-center justify-between text-[14px] sm:mb-16">
+        <div className="mx-auto flex w-full max-w-[1240px] flex-1 flex-col px-5 py-7 sm:px-8 sm:py-10">
+          <header className="mb-10 flex items-center justify-between text-[14px] sm:mb-12">
             <Link
               href="/"
               className="font-mono text-foreground hover:text-accent"

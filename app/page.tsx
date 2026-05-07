@@ -1,33 +1,46 @@
 import { ProjectCard } from "@/components/ProjectCard";
-import { SectionLabel } from "@/components/SectionLabel";
 import { TerminalCursor } from "@/components/TerminalCursor";
 import { CATEGORY_LABEL, getByCategory } from "@/lib/projects";
 
 export default function Home() {
   const groups = getByCategory();
   return (
-    <div className="space-y-16 sm:space-y-24">
-      <section className="fade-up max-w-[760px] space-y-5">
-        <p className="font-mono text-[13px] text-accent">$ joshua chua</p>
-        <h1 className="text-[34px] font-medium leading-[1.15] tracking-tight text-foreground sm:text-[44px]">
-          AI engineer building production
+    <div className="space-y-14">
+      <section className="fade-up max-w-[820px] space-y-5 pb-2">
+        <p className="font-mono text-[12px] uppercase tracking-wide text-accent">
+          $ joshua chua · ai engineer
+        </p>
+        <h1 className="text-[32px] font-medium leading-[1.1] tracking-tight text-foreground sm:text-[44px] lg:text-[52px]">
+          Production Claude-powered systems —
           <br />
-          Claude-powered systems.
+          <span className="text-foreground/55">
+            chiefs of staff, correction pipelines, scoring engines.
+          </span>
           <TerminalCursor />
         </h1>
-        <p className="max-w-[58ch] text-[16px] leading-[1.7] text-foreground/75 sm:text-[17px]">
-          Chiefs of staff, correction pipelines, scoring engines, context
-          substrates. Each project below has a clickable demo and a process
-          flow showing how the model fits in.
+        <p className="max-w-[60ch] text-[15px] leading-[1.65] text-foreground/65 sm:text-[16px]">
+          Each project below ships with a clickable demo and a process flow
+          showing where the model fits. Click into any one — they&apos;re
+          mockups, but they show the real architecture.
         </p>
       </section>
 
-      <div id="projects" className="space-y-16 sm:space-y-20">
+      <div id="projects" className="space-y-12">
         {groups.map(({ category, items }) =>
           items.length === 0 ? null : (
-            <section key={category} className="space-y-6">
-              <SectionLabel>{CATEGORY_LABEL[category]}</SectionLabel>
-              <div className="grid gap-4 sm:grid-cols-2">
+            <section key={category} className="space-y-4">
+              <div className="flex items-baseline gap-3 border-b border-border pb-2">
+                <span className="font-mono text-[11px] uppercase tracking-wide text-accent">
+                  ›
+                </span>
+                <h2 className="font-mono text-[12px] uppercase tracking-[0.08em] text-muted">
+                  {CATEGORY_LABEL[category]}
+                </h2>
+                <span className="ml-auto font-mono text-[11px] text-muted">
+                  {items.length}
+                </span>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((project) => (
                   <ProjectCard key={project.slug} project={project} />
                 ))}
@@ -37,7 +50,7 @@ export default function Home() {
         )}
       </div>
 
-      <footer className="border-t border-border pt-8 font-mono text-[13px] text-muted">
+      <footer className="border-t border-border pt-6 font-mono text-[12px] text-muted">
         <div className="flex flex-wrap gap-x-6 gap-y-2">
           <a
             href="https://github.com/rmptue"
@@ -48,23 +61,18 @@ export default function Home() {
             github
           </a>
           <a
-            href="https://linkedin.com/in/joshuachua"
+            href="https://www.linkedin.com/in/jachua3/"
             target="_blank"
             rel="noreferrer"
             className="hover:text-accent"
           >
             linkedin
           </a>
-          <a href="mailto:hello@joshuachua.dev" className="hover:text-accent">
-            email
-          </a>
           <a
-            href="https://altographanalytics.com"
-            target="_blank"
-            rel="noreferrer"
+            href="mailto:chuajoshuaalto@gmail.com"
             className="hover:text-accent"
           >
-            ccet explorer
+            email
           </a>
         </div>
       </footer>
