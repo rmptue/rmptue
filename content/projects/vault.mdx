@@ -1,0 +1,64 @@
+## what it is
+
+Claude has no persistent memory between sessions. I have years of project notes. The Vault is the bridge — a structured Obsidian repository designed so that the right context lands in the prompt before the model has to ask for it. Every other project on this site reads from it.
+
+This is the meta-piece. It&apos;s a **context-engineering pattern** for personal AI, not a product.
+
+## the keyword-routing pattern
+
+The userPreferences slot in claude.ai isn&apos;t just a style config — it&apos;s a router. I encode a keyword → file map there:
+
+```
+bps / financial-narrative      → work/projects/bps-generator.md
+vantage / chief of staff       → personal-builds/vantage/index.md
+freedom park / godot           → personal-builds/freedom-park/index.md
+career / job search            → career/2026-strategy.md
+mrv / climate measurement      → consultancy/mrv-research/index.md
+```
+
+When I mention &quot;BPS&quot; in a chat, Claude pulls the right note before responding. No re-explaining. No vector search. Deterministic retrieval against a small, hand-curated map.
+
+## folder layout
+
+```
+daily/             # daily notes — one per day, includes a "claude session" bullet
+work/              # employment work (sanitized references only)
+consultancy/       # altograph engagements
+personal-builds/   # everything on this site
+content/           # writing, drafts, ideation
+career/            # career strategy, applications
+wealth/            # finance tracking
+knowledge/         # reference material I want claude to read
+_core/             # profile, preferences, behaviors
+```
+
+Each active project has an `index.md` that captures decisions, constraints, current phase, and links out. That&apos;s the file the keyword router points at.
+
+## the daily-note pattern
+
+Every daily note has a `### Claude session` section. After each substantive conversation I drop one to three bullets summarizing what was discussed and what was decided. When I return to a topic days later, I or the model can reconstruct the thread by reading the relevant daily notes.
+
+This is the cheapest version of long-term memory you can build. It&apos;s a write-only log, indexed by date, that any future session can read.
+
+## mcp integration
+
+Claude has direct read, edit, search, and write access to the vault via the MCP filesystem server. The behavior contract:
+
+- surface the affected file path before writing
+- confirm before any destructive edit
+- never fabricate file contents — read first, then propose
+- preserve frontmatter and structural conventions
+
+This contract lives in the vault behavior file in `_core/`, not in userPreferences. It&apos;s long, project-specific, and shouldn&apos;t leak into unrelated chats.
+
+## why this beats RAG
+
+For a personal corpus of a few thousand markdown files, semantic search is solving the wrong problem. I know which note holds the BPS prompt. I want Claude to pull that exact file, not a chunk that&apos;s 0.83 cosine-similar to the query.
+
+Other wins: human-readable diffs, version control, no embedding pipeline to maintain, no vector DB to host, and a substrate that survives any tooling change. If claude.ai disappears tomorrow, the vault is still a vault.
+
+## what i learned
+
+Context engineering and prompt engineering are different disciplines. Prompt engineering is what you ask the model. Context engineering is what the model sees before you ask. Most quality wins in personal AI come from the second.
+
+Deterministic retrieval beats semantic retrieval whenever the corpus is small and the routing logic is stateable. Save the embeddings for problems where the routing logic genuinely cannot be written down.

@@ -1,0 +1,37 @@
+## what it is
+
+Claude Haiku is the conversational core. Every Discord message I send to my private bot routes through n8n, gets enriched with context assembled at request-time from a GitHub-synced Obsidian vault and on-demand Notion reads, and is answered by Haiku. Three scheduled workflows run alongside: a 7am morning briefing that synthesizes CoinGecko prices and nine NewsAPI feeds through the model, plus 3pm and 11pm news flashes that skip the LLM entirely and just aggregate.
+
+The interesting engineering isn&apos;t the model call — it&apos;s the **context-engineering pipeline** that decides what gets into the prompt. A deterministic command parser routes input first. If the request is a vault read or a Notion command, the bot does that directly without spending a token. Only the open-ended conversational turns reach Claude.
+
+## why haiku
+
+Sonnet would answer better. Haiku answers fast enough, cheap enough, and well enough for the actual job — daily personal context queries, briefing synthesis, light reasoning over my own notes. Operating cost runs about three to five dollars a month for daily personal use. The intelligence ceiling for this task is well below Sonnet&apos;s, so the latency and cost wins are free.
+
+## architecture
+
+```
+Discord (input)
+  → Railway-hosted Python bot
+  → n8n.cloud webhook
+  → command parser (deterministic)
+  → branch:
+      - vault read?        → GitHub raw read → response
+      - Notion command?    → Notion API → response
+      - conversational?    → context assembly → Claude Haiku → response
+  → Discord (output)
+```
+
+The vault sync is the part most people skip. My Obsidian notes live in a private GitHub repo. Railway pulls the repo on a schedule. The bot reads the relevant active-project files plus a profile summary on every conversational call. Small corpus, deterministic retrieval, version-controlled, and human-readable — beats a vector DB at this scale.
+
+## phases
+
+Phase 1 (foundation), Phase 2 (scheduled briefings), and Phase 3 (knowledge & project commands) are live. Phase 4 adds wealth tracking (a separate Notion database with portfolio queries). Phase 5 explores model routing — Haiku by default, escalate to Sonnet on complexity heuristics — plus voice input and an arxiv digest.
+
+## what i learned
+
+When you can spend $5/month and get the answers you need, you have spent enough. Most personal-AI projects fail by reaching for Sonnet on every turn. The win is in the routing layer, not the model.
+
+For personal knowledge, a markdown vault in git is a more honest substrate than a vector DB. Diffs are readable, retrieval is deterministic, and you can audit exactly what the model saw on any given call.
+
+Scheduled flows are a great place to skip the LLM entirely. The 3pm and 11pm news flashes are pure aggregation — no model involved. They&apos;re cheaper, faster, and more reliable than the 7am briefing, and they&apos;re also less interesting to read. That&apos;s the trade.

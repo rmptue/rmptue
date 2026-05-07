@@ -1,0 +1,62 @@
+## what it is
+
+A Claude Sonnet pipeline that turns structured P&amp;L data into the qualitative MD&amp;A-style commentary that finance teams write monthly — variance explanations, driver attribution, cross-period framing. Roughly 90% automation of a recurring narrative-generation task.
+
+The engineering challenge is **groundedness**. Every claim in the output must trace back to a row in the input. No fabricated drivers. No invented context.
+
+## structured-data-to-narrative
+
+The input is a normalized P&amp;L table — accounts, periods, values, deltas, and a small set of pre-computed ratios. The output is a multi-section commentary with sections like:
+
+- topline performance vs. prior period
+- margin movement and the drivers behind it
+- cost-side variance attribution
+- non-recurring items called out
+- forward-looking framing where the data supports it
+
+Sonnet writes the prose. The interesting design is the citation contract.
+
+## citation-anchored prompting
+
+Every quantitative claim in the output is required to cite the source row inline using a tagged span:
+
+```
+revenue grew 8.4% [r:revenue.q3-2025]
+driven primarily by category mix shifts [r:gross_margin_by_cat.q3-2025]
+```
+
+The prompt is explicit: a claim without a citation is not a valid output. The model is asked to refuse rather than guess.
+
+## the validator
+
+Generation isn&apos;t enough. A second pass programmatically validates that every cited row exists in the source data, that the cited value matches the claim&apos;s direction (a &quot;grew&quot; claim must point to a row with a positive delta), and that no quantitative claim appears uncited.
+
+Failures get surfaced for human review. They don&apos;t silently pass.
+
+## why ~90% is the right target
+
+The last 10% is judgment work. Strategic framing, context the model doesn&apos;t have (an upcoming product launch, a known vendor disruption, a hiring freeze), executive voice. These shouldn&apos;t be automated — automating them is how generated finance reports start sounding like generated finance reports.
+
+The system saves the analyst an hour per cycle and produces a draft that&apos;s 90% of the way there. The analyst spends fifteen minutes adding the context the data can&apos;t see. That&apos;s the right division of labor.
+
+## architecture
+
+```
+P&L source data (normalized table)
+  → preprocessor: deltas, ratios, period framing
+  → claude sonnet
+       prompt: rubric + section specs + citation contract
+       output: structured commentary with [r:row-id] citations
+  → validator
+       checks: row exists, direction match, full citation coverage
+  → review UI (streamlit-style)
+       analyst sees: draft + citation map + flagged claims
+```
+
+## what i learned
+
+Citation-anchored prompts are the cleanest way I&apos;ve found to fight LLM confabulation in structured-to-narrative tasks. The model isn&apos;t asked to be honest; it&apos;s asked to point at the row. Pointing is a verifiable behavior.
+
+A validator that runs after generation is worth more than a longer prompt. The prompt sets the contract; the validator enforces it. Either alone is brittle. Both is robust.
+
+Don&apos;t aim for 100%. The last 10% is where the human earns their keep, and removing them is a degradation, not an improvement.

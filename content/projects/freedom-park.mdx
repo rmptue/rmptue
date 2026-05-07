@@ -1,0 +1,48 @@
+## what it is
+
+A solo cozy college-life pixel-art sim built in Godot 4. The interesting thing isn&apos;t the game. It&apos;s the **multi-model creative pipeline** that produces it.
+
+Claude Sonnet is the design partner — game design discussion, dialogue writing, GDScript scaffolding. Gemini paints isometric backgrounds. Aseprite is the manual revision step. Each model does what it&apos;s best at; nothing tries to do everything.
+
+## the pipeline
+
+```
+design conversation       → claude sonnet
+dialogue + character voice → claude sonnet
+GDScript scaffolding       → claude sonnet
+painted backgrounds        → gemini
+sprite revision + cleanup  → aseprite (human)
+in-engine integration      → godot
+```
+
+The art-direction journey is the case study, not the game.
+
+## three pivots
+
+The project pivoted three times before locking the pipeline.
+
+**Pivot 1.** Started with Pixellab&apos;s atomic isometric pipeline — generate sprite atoms, compose into rooms. The composition was clean but the visual language was too thin for a cozy game. Backgrounds especially looked sterile.
+
+**Pivot 2.** Switched to fully painted backgrounds via Gemini. The visual language jumped, but I lost the ability to do quick edits — the model would re-paint the whole room when I asked for a small change.
+
+**Pivot 3.** Briefly tried HD-2D (high-res sprites with painted backdrops). Shipped one room. The aesthetic worked but the asset budget was wrong for a solo dev — every prop became a project.
+
+**Reversal back to Gemini-painted.** A skill-context disclosure justified the reversal: I realized I&apos;d been treating the asset pipeline as a fixed constraint when it should have been a parameter. Switched back to Gemini-painted backgrounds plus an Aseprite revision pass. Same visual language as Pivot 2, but with a manual cleanup step that handles the edits Gemini gets wrong.
+
+The pivots weren&apos;t failures. Each one proved one thing about the constraints. Pivot 3 cost the most and taught the most.
+
+## phase 0 + 0.5
+
+Shipped: one playable room, one NPC with dialogue tree, player movement, art style validated in-engine, and the asset pipeline locked. That&apos;s the minimum for proving the loop works.
+
+## the bunk-bed prompt
+
+A separate sub-case-study lives on the [skills page](/skills) — three iterations of a prompt for editing a bunk-bed sprite without breaking spatial logic. Preservation lists, viewpoint constraints, and predicted spatial conflicts named in the prompt before the model produced them.
+
+## what i learned
+
+When new information arrives, switch strategies. A frustration loop is the failure mode where you stick with a strategy because you&apos;ve invested in it. Pivot 3 was the lesson: I noticed I was framing the asset pipeline as a constraint, asked &quot;what if it&apos;s a parameter,&quot; and the answer was a better pipeline.
+
+AI-assisted asset pipelines still need human revision steps. The art lead is the human; the model is the assistant. Reversing that produces homogeneous output that all looks like other AI-assisted output.
+
+Scope phases so each one proves one thing. Phase 0 proved the engine loop. Phase 0.5 proved the asset pipeline. Phase 1 will prove the dialogue system. Three things, three phases. Don&apos;t try to prove the game design in any of them — that comes later, after the system is real.

@@ -1,0 +1,52 @@
+## what it is
+
+A local pipeline that ingests job postings from SerpAPI and RSS feeds, normalizes them, and scores each one against multiple resume variants using Claude Haiku — turning a firehose of listings into a ranked shortlist.
+
+Frame it correctly: this is **a personal LLM scoring pipeline for high-volume document evaluation**. Job search is the demo case. The interesting work is keeping scores stable across thousands of postings.
+
+## the scoring problem
+
+Score every posting 0–100 against each resume variant on a fixed rubric:
+
+- domain fit
+- seniority match
+- AI / automation surface area
+- comp band
+- red flags (toxic language, vague scope, role-stuffing, wrong country)
+
+That&apos;s the easy part. The hard part is keeping the same posting from getting different scores on different runs — drift is a real failure mode, position bias inside the rubric is a real failure mode, and rubric leakage between dimensions is a real failure mode.
+
+## defenses
+
+**Frozen system prompt.** The rubric is baked. No string interpolation of variant names or rubric fields beyond what the contract requires. Changes go through a versioned migration with a regression test.
+
+**Deterministic temperature.** Temperature 0. The model still varies a little run-to-run, but the variance is small enough to detect drift against.
+
+**Calibration set.** Twenty hand-scored postings spanning the score distribution. Re-scored on every prompt change. The metric is mean-absolute-deviation from the hand-score. If MAD jumps above the threshold, the prompt change is rejected.
+
+**Position-bias check.** The rubric is asked twice with dimensions in reversed order on a calibration sample. If scores differ by more than the threshold, the rubric is over-coupled and gets refactored.
+
+## architecture
+
+```
+SerpAPI + RSS feeds
+  → posting normalizer (deterministic)
+  → dedupe (hash on title + company + first 200 chars)
+  → claude haiku scorer
+       prompt: rubric + variant + posting body
+       output: structured JSON {scores, flags, rationale}
+  → SQLite
+  → Next.js dashboard (filtering, ranking, export)
+```
+
+## why haiku is enough
+
+This task doesn&apos;t need Sonnet. The rubric does most of the work; the model just has to apply it consistently. Haiku at temperature 0 with a tight prompt scores within tolerance of Sonnet on the calibration set, at a fraction of the cost. The volume — thousands of postings a week — would be ruinous on Sonnet.
+
+The lesson generalizes: rubric quality is a substitute for model quality whenever the task is scoring against a fixed spec.
+
+## what i learned
+
+The hardest part of LLM scoring isn&apos;t getting good scores. It&apos;s detecting when scores get worse without you noticing. Calibration sets and regression metrics are not optional infrastructure — they&apos;re the only way you find out the prompt rewrite you did last Tuesday quietly broke seniority detection.
+
+A scoring pipeline doesn&apos;t care what the documents are. The same architecture works for grant proposals, candidate resumes, vendor pitches, or research abstracts. Build it once, point it at whatever you&apos;re drowning in.

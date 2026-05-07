@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# rmptue — Joshua Chua portfolio
 
-## Getting Started
+AI-engineering portfolio. Next.js 16, Tailwind v4, MDX content, Geist Mono.
 
-First, run the development server:
+## dev
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Push to the `main` branch — Vercel auto-deploys via the connected project.
+Project name on Vercel is `rmptue`.
 
-## Learn More
+For a one-off CLI deploy:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+vercel --prod
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## edit content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+All written content lives in `/content/`:
 
-## Deploy on Vercel
+- `content/projects/[slug].mdx` — one file per project
+- `content/case-studies/[slug].mdx` — one file per case study
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Project metadata (title, status, stack, AI components, ordering) lives in
+[`lib/projects.ts`](lib/projects.ts) — that's the single source of truth for
+the homepage list and project page headers.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To add a new project:
+
+1. Add an entry to `projects` in `lib/projects.ts`.
+2. Create `content/projects/<slug>.mdx`.
+3. The route `/projects/<slug>` is generated automatically.
+
+See [CONTENT.md](CONTENT.md) for everything that needs updating when you
+rename or remove a project.
+
+## stack
+
+- Next.js 16 (App Router, TS, strict)
+- Tailwind v4 (CSS-first theme tokens)
+- MDX via `@next/mdx` with dynamic imports per route
+- Geist Mono everywhere; Geist Sans only for fine print
+- Static export — no DB, no auth, no CMS
+- Deployed on Vercel as `rmptue`
+
+## design contract
+
+Dark terminal aesthetic. Background `#0a0a0a`, foreground `#e5e5e5`, accent
+`#22d3ee`. Generous line-height (1.7). Max content width 720px. Section
+labels prefixed with `>` or `$`. Mono everywhere. No drop shadows, no
+gradients. See [DECISIONS.md](DECISIONS.md) for choices that diverge from
+the original brief.

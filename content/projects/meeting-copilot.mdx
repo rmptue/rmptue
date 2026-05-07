@@ -1,0 +1,47 @@
+## what it is
+
+A two-model pipeline running locally on a single laptop. Faster-Whisper (GPU) handles speech-to-text. Claude Sonnet runs a **correction layer** over rolling chunks — fixing diarization confusion, hallucinated content during silence, project-name corruption, and template fabrication.
+
+The interesting engineering is the correction prompt. It&apos;s an allow-list-based system prompt that refuses to invent sections the source audio doesn&apos;t support.
+
+## the bug-driven build log
+
+The case study is the iteration story. Every fix was a prompt change, not a code change.
+
+**Diarization confusion.** Whisper would attribute one speaker&apos;s line to another. Fix: a speaker-aware correction prompt that tags lines with confidence and refuses to swap speakers without strong textual evidence (named address, pronoun chain, prior turn).
+
+**Silence hallucination.** During quiet stretches, Whisper invents content (&quot;Thank you. Thanks for watching.&quot; appearing in meetings that have neither). Fix: a confidence-threshold gate before Claude sees the chunk. Low-confidence segments get dropped, not corrected.
+
+**Location-inversion bug.** &quot;She&apos;s in the Manila office&quot; would render as &quot;She&apos;s in the office in Manila&quot; — a meaning-preserving edit in most cases, but in one meeting it inverted who was where. Fix: a prompt-level constraint on entity references. The model is allowed to fix grammar, not rewrite spatial relationships.
+
+**Template fabrication.** The model was inventing a &quot;Technical Debt&quot; section in the output when nothing in the source supported it. Soft instructions like &quot;don&apos;t make things up&quot; failed three times. Fix: an **allow-list of permitted output sections**. Anything not on the list gets refused. The instruction shifted from &quot;don&apos;t fabricate&quot; (a non-instruction) to &quot;the only valid sections are these.&quot;
+
+**Project-name corruption.** &quot;MD&amp;A&quot; would surface as &quot;MV&amp;A&quot;, &quot;BPS&quot; as &quot;DPS&quot;. Fix: a glossary injected per session. Acronyms are listed verbatim and the prompt forbids edits to anything matching the glossary.
+
+## architecture
+
+```
+mic / system audio
+  → ffmpeg capture
+  → 30-second rolling chunks
+  → Faster-Whisper (large-v3, GPU)
+  → confidence gate
+  → Claude Sonnet correction
+      with: speaker-aware rules
+            entity-preservation constraints
+            output-section allow-list
+            session glossary
+  → markdown transcript with diarization
+```
+
+## why sonnet for correction
+
+Haiku lost too much fidelity on the harder edits — it would correct &quot;BPS&quot; to &quot;BPF&quot; instead of preserving the glossary term. Sonnet&apos;s instruction-following is the load-bearing thing here, not raw intelligence. The correction layer is judgment-heavy, not knowledge-heavy.
+
+## what i learned
+
+Allow-lists beat instructions. &quot;Don&apos;t do X&quot; is a soft constraint that the model rebalances against helpfulness. &quot;The only valid outputs are A, B, C&quot; is a hard constraint with no helpfulness-shaped escape hatch.
+
+A second model is worth its cost when the first model&apos;s failures are systematic and judgable. STT errors are systematic (silence hallucination, low-confidence speakers). They&apos;re also externally judgable from the chunk itself. That&apos;s the regime where a correction layer wins.
+
+If a prompt change fixes a class of bugs, write down the class. Otherwise the next change re-introduces the bug for a different reason.

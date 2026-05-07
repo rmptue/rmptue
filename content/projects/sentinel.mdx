@@ -1,0 +1,48 @@
+## what it is
+
+A 10-module Python system that watches my comms surfaces — Slack, email, Teams — and uses Claude as the **routing brain** for every inbound message. Each message gets classified for urgency, drafted a candidate response, and queued for review. The point is to keep me responsive without breaking focus.
+
+The non-trivial engineering is the module boundary design. The LLM call is isolated to one well-typed contract per module so each can be tested independently against a fixture corpus.
+
+## the modules
+
+Ten modules, each with one job:
+
+```
+1. ingestion          — pulls from each source into a normalized Message
+2. classification     — claude haiku assigns urgency / topic / actor type
+3. draft              — claude sonnet writes a candidate response
+4. presence           — detects whether i'm focused, available, or away
+5. queue              — the review buffer
+6. review UI          — i triage drafts: send / edit / discard
+7. send dispatch      — pushes the approved response back to the source
+8. audit log          — records every decision and outcome
+9. error recovery     — quarantines failed messages without blocking the queue
+10. telemetry         — surfaces volume, latency, and approval rate
+```
+
+The seam between modules is a typed contract (a Pydantic model). The LLM call lives inside `classification` and `draft`. Everything else is deterministic and unit-testable.
+
+## the haiku-routes-to-sonnet pattern
+
+Running Sonnet on every inbound message is wasteful — most messages don&apos;t need a draft at all (FYIs, automated notifications, channel chatter). The pattern:
+
+1. Haiku classifies first. Cheap, fast, good enough at urgency and topic.
+2. Only messages flagged as response-warranting reach Sonnet.
+3. Sonnet drafts; the draft goes to the queue.
+
+This drops cost by roughly an order of magnitude versus naive &quot;Sonnet on everything,&quot; without measurably hurting draft quality on the messages that matter.
+
+## where the LLM call lives
+
+A common mistake: putting the LLM call at the system boundary (the ingestion or send module). That couples model behavior to surface-specific concerns and makes testing miserable.
+
+The right place is the middle. The boundary modules normalize and dispatch. The LLM modules consume normalized inputs and emit typed outputs. You can swap Slack for Teams without touching the model code.
+
+## what i learned
+
+For non-deterministic systems, write your tests against typed outputs and stable invariants, not exact strings. &quot;The classifier returns urgency ∈ `{low, medium, high}` and topic ∈ `{known set}`&quot; is testable. &quot;The classifier returned exactly the string X&quot; is brittle.
+
+Human-in-the-loop is the right default for any system that sends on your behalf. The review UI is where the system stops being scary. The day I get rid of it is the day someone replies to a phishing email in my voice.
+
+The audit log earns its keep on day two. Day-one debugging is just &quot;what did the model do.&quot; Day-two debugging is &quot;what did the model do *across the last week* and where did the approval rate drop.&quot; You can&apos;t answer that without the log.
