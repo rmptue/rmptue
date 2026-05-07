@@ -16,24 +16,24 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://rmptue.vercel.app"),
   title: {
-    default: "Joshua Chua — AI engineer",
+    default: "Joshua Chua — Applied AI Engineer",
     template: "%s · Joshua Chua",
   },
   description:
-    "AI engineer and applied-AI builder. Production Claude-powered systems — chiefs of staff, correction pipelines, scoring engines, context substrates.",
+    "Applied AI engineer building production AI systems for analytics-shaped problems — chiefs of staff, scoring engines, narrative pipelines, context substrates.",
   openGraph: {
-    title: "Joshua Chua — AI engineer",
+    title: "Joshua Chua — Applied AI Engineer",
     description:
-      "Production Claude-powered systems — chiefs of staff, correction pipelines, scoring engines, context substrates.",
+      "Production AI systems for analytics-shaped problems — chiefs of staff, scoring engines, narrative pipelines.",
     url: "https://rmptue.vercel.app",
     siteName: "Joshua Chua",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Joshua Chua — AI engineer",
+    title: "Joshua Chua — Applied AI Engineer",
     description:
-      "Production Claude-powered systems — chiefs of staff, correction pipelines, scoring engines, context substrates.",
+      "Production AI systems for analytics-shaped problems — chiefs of staff, scoring engines, narrative pipelines.",
   },
 };
 

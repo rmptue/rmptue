@@ -8,12 +8,12 @@ export default function Home() {
     <div className="space-y-14">
       <section className="fade-up max-w-[860px] space-y-5 pb-2">
         <p className="font-mono text-[11.5px] uppercase tracking-[0.08em] text-accent">
-          $ joshua chua · ai engineer
+          $ joshua chua · applied ai engineer
         </p>
         <h1 className="text-[24px] font-medium leading-[1.2] tracking-tight text-foreground sm:text-[30px] lg:text-[36px]">
-          Production AI systems —{" "}
+          Production AI systems for analytics-shaped problems —{" "}
           <span className="text-foreground/55">
-            chiefs of staff, correction pipelines, scoring engines.
+            chiefs of staff, scoring engines, narrative pipelines.
           </span>
           <TerminalCursor />
         </h1>

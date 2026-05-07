@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Joshua Chua — AI engineer";
+export const alt = "Joshua Chua — Applied AI Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -12,8 +12,8 @@ export default function OG() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#0a0a0a",
-          color: "#e5e5e5",
+          background: "#0c0b0a",
+          color: "#ebe7e0",
           fontFamily: "monospace",
           padding: "80px",
           display: "flex",
@@ -21,21 +21,22 @@ export default function OG() {
           justifyContent: "space-between",
         }}
       >
-        <div style={{ display: "flex", color: "#22d3ee", fontSize: 28 }}>
-          $ joshua chua
+        <div style={{ display: "flex", color: "#5fd9e8", fontSize: 26 }}>
+          $ joshua chua · applied ai engineer
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div style={{ fontSize: 64, fontWeight: 500, lineHeight: 1.1 }}>
-            ai engineer,
+          <div style={{ fontSize: 60, fontWeight: 500, lineHeight: 1.1 }}>
+            production ai systems
             <br />
-            applied-ai builder.
+            <span style={{ color: "#807a72" }}>
+              for analytics-shaped problems.
+            </span>
           </div>
-          <div style={{ fontSize: 28, color: "#737373", maxWidth: 900 }}>
-            production claude-powered systems — chiefs of staff,
-            correction pipelines, scoring engines, context substrates.
+          <div style={{ fontSize: 26, color: "#807a72", maxWidth: 1000 }}>
+            chiefs of staff · scoring engines · narrative pipelines · context substrates
           </div>
         </div>
-        <div style={{ display: "flex", color: "#737373", fontSize: 22 }}>
+        <div style={{ display: "flex", color: "#807a72", fontSize: 22 }}>
           rmptue.vercel.app
         </div>
       </div>

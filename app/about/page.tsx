@@ -3,7 +3,7 @@ import { SectionLabel } from "@/components/SectionLabel";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "AI engineer and applied-AI builder.",
+  description: "Applied AI engineer with analytics roots.",
 };
 
 export default function AboutPage() {
@@ -13,9 +13,10 @@ export default function AboutPage() {
 
       <section className="space-y-4 leading-[1.75] text-foreground/85">
         <p>
-          AI engineer and applied-AI builder. Multi-role analytics
-          professional in healthcare and DTC ecommerce, shipping production
-          Claude-powered systems on the side.
+          Applied AI engineer with analytics roots. Multi-role analytics
+          professional across SaaS, healthcare, and ESG, now shipping
+          production Claude-powered systems for the same kind of
+          analytics-shaped problems I used to solve with dashboards.
         </p>
         <p>
           What I&apos;m interested in: context engineering, multi-model
