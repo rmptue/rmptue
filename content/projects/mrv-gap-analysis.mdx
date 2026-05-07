@@ -1,0 +1,31 @@
+## what it is
+
+A research brief on the state of MRV (Monitoring, Reporting, Verification) infrastructure for Philippine climate measurement. Claude is the synthesis partner across 30+ source documents — agency reports, academic papers, regulatory filings, donor reviews — pulling out structured claims and assembling them into a comparative gap matrix.
+
+The output is a public document. The system that produces it is the AI engineering work.
+
+## the AI architecture
+
+Three layers; the structured-extraction layer is the load-bearing one.
+
+**Structured extraction.** Each source document is processed through a Claude prompt that asks for typed JSON: which agency, which instrument (carbon registry, emissions inventory, biodiversity monitor, hazard map), what coverage gaps the source identifies, what reporting cadence is implied, and a verbatim citation for each claim. Claude is explicitly told to prefer &quot;not stated in source&quot; over inference.
+
+**Citation contract.** Every extracted claim has a quote — the exact span from the source — plus a page or section anchor. The downstream gap matrix shows the claim and a link to the citation; readers can audit any cell back to a source paragraph. Same pattern as the BPS Generator&apos;s citation-anchored prompting.
+
+**Gap matrix synthesis.** With 30+ documents extracted, a second pass asks Claude to identify cross-source gaps — where one document says coverage is X and another says it&apos;s Y, where claims in two documents reference the same instrument but contradict on cadence, where coverage is asserted by no source at all. The matrix output is a structured table the brief is built around.
+
+## why this is interesting
+
+Most research synthesis ends as &quot;a person read everything and wrote a summary.&quot; The summary is unauditable — readers can&apos;t check whether claim X actually came from source Y. The citation-anchored extraction layer changes that. Every gap statement in the final brief carries its source paragraph; a reader can challenge any specific claim without challenging the whole thing.
+
+This is also a test case for **structured extraction at corpus scale**. Thirty documents is small enough to do by hand; three hundred isn&apos;t. The patterns that work at thirty are the patterns that scale to a real research operation.
+
+## status
+
+Prototype / phase 0. Extraction layer working over a 12-document seed corpus. Gap matrix synthesis in progress. Public brief targeted for late Q3 2026.
+
+## what i learned
+
+The right way to use Claude as a research partner is as a structured-output engine, not a chat partner. &quot;Summarize this document&quot; produces a paraphrase; &quot;extract these typed fields with verbatim citations&quot; produces an auditable record. The first is faster to set up; the second is the only one a serious reader trusts.
+
+&quot;Not stated in source&quot; is a magic phrase. Without it, the model fills gaps with plausible-sounding inference. With it, gaps stay gaps — which is exactly what a gap analysis needs.

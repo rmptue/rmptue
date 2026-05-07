@@ -1,0 +1,27 @@
+## what it is
+
+Give Claude a role brief and a target company profile; get back Boolean LinkedIn searches, a ranked list of candidates with rubric scores, and outreach drafts in three voice registers. Built originally as a deliverable for a venture-studio assessment, then reframed as a standalone prototype because the pattern generalizes.
+
+## the AI architecture
+
+Three-stage pipeline; Claude does most of it.
+
+**Search-query generator.** A role brief in (title, must-haves, nice-to-haves, exclusions) goes to Claude with a prompt that asks for five Boolean variants ordered from precision-favoring to recall-favoring. The variants get pasted into LinkedIn search and the top N profiles per variant come back.
+
+**Candidate scorer.** Each returned profile is scored 0–100 against the role rubric — domain fit, seniority match, evidence-of-execution, red flags (job-hopping that doesn&apos;t match the brief, vague titles, location mismatch). Same scoring discipline as Job Radar: frozen prompt, deterministic temperature, calibration set.
+
+**Outreach drafter.** For shortlisted candidates, Claude drafts three outreach versions — warm (peer/casual), direct (recruiter-formal), and peer-to-peer (founder-to-IC, dropping the recruiter framing entirely). The drafts read the candidate&apos;s profile *and* the requester&apos;s profile so the voice register fits both sides.
+
+## the calibration trick
+
+The honest failure mode for AI-driven sourcing is **plausible-sounding bad candidates**. A profile can score 87 because it pattern-matches on keywords while being a genuinely poor fit. Defense: a hand-scored calibration set of twenty candidates per role family, run on every prompt change. Score drift above the threshold rejects the prompt change.
+
+## status
+
+Prototype. Used live for the venture-studio assessment (anonymized — three roles, three sourcing runs). The interesting open question is whether the calibration set generalizes across role families or whether each new family needs its own calibration. Working hypothesis: domains close to my own evaluation experience (analytics, AI eng) calibrate fast; domains I don&apos;t evaluate well in real life (sales leadership, GTM ops) need more care.
+
+## what i learned
+
+Sourcing breaks down into &quot;find candidates&quot; + &quot;rank candidates&quot; + &quot;reach candidates.&quot; The model is fine at all three in isolation. The thing to get right is the **rubric** — vague rubrics produce vague rankings, and a vague ranking from a confident-sounding model is worse than no ranking at all.
+
+The voice-register split for outreach is the part recruiters consistently get wrong. Most outreach reads recruiter-formal because the sender is a recruiter and that&apos;s their natural register. The model can produce direct or peer-to-peer registers cleanly when explicitly asked. That&apos;s a real productivity unlock for a non-recruiter doing sourcing themselves.

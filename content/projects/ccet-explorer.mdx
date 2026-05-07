@@ -1,0 +1,28 @@
+## what it is
+
+A public visualization of the Philippine national climate budget — the Climate Change Expenditure Tagging (CCET) dataset reshaped into views that a non-technical reader can actually use. Live at [altographanalytics.com](https://altographanalytics.com).
+
+The dataset itself is published by DBM in a form that&apos;s hard to read. The Explorer is the layer that makes &quot;how much is this country spending on climate, by who, on what&quot; legible in fifteen seconds.
+
+## the AI angle
+
+Claude Code did most of the development work — ETL scaffolding, schema normalization, view-component drafts. The interesting part is the **chart-narration layer**: every view ships with a one-paragraph explanation drafted by Claude that frames what the reader is looking at, what to compare it against, and what would change the story. Narrations are reviewed before publication; the model produces drafts, the human approves.
+
+This matters because budget data without framing is noise. The Explorer&apos;s job isn&apos;t to render bars — it&apos;s to translate budget categories into something a city planner, a journalist, or an interested citizen can act on.
+
+## what&apos;s in v0.1 (live)
+
+- Agency view — climate spend per agency, sorted, with year-over-year comparison
+- Strategy view — adaptation vs mitigation rollup
+- Year-over-year view — multi-year tracker of total tagged spend
+- Methodology page — how CCET tagging works, with the caveats every user should know
+
+## what&apos;s in v0.2 (in progress)
+
+A four-view redesign: agency × region × strategy × program. The interesting work is the cross-cut — letting users slice the budget by two dimensions at once without exploding the UI complexity.
+
+## what i learned
+
+The right frame for public data work is &quot;every chart is a question.&quot; Bar charts answer how-much. Line charts answer what-direction. The mistake is shipping a chart without naming the question it answers — readers fill the gap with whatever assumption is convenient. The narration layer makes the question explicit.
+
+Claude Code is genuinely good at the data-pipeline grunt work — schema normalization, missing-value handling, outlier detection in raw government tables. It&apos;s less good at the &quot;what should this view actually show&quot; question, which is judgment work and stays human.

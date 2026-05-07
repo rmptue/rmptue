@@ -49,27 +49,24 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
-      <body className="flex min-h-full flex-col">
-        <div className="mx-auto flex w-full max-w-[720px] flex-1 flex-col px-5 py-10 sm:px-6 sm:py-14">
-          <header className="mb-10 flex items-center justify-between text-[13px] sm:mb-14">
+      <body className="flex min-h-full flex-col ambient-glow">
+        <div className="mx-auto flex w-full max-w-[1080px] flex-1 flex-col px-5 py-8 sm:px-8 sm:py-12">
+          <header className="mb-12 flex items-center justify-between text-[14px] sm:mb-16">
             <Link
               href="/"
-              className="text-foreground hover:text-accent"
+              className="font-mono text-foreground hover:text-accent"
               aria-label="Home"
             >
               <span className="text-accent">$</span> joshua
             </Link>
-            <nav className="flex gap-4 text-muted sm:gap-5">
-              <Link href="/skills" className="hover:text-accent">
-                skills
+            <nav className="flex gap-5 text-muted sm:gap-7">
+              <Link href="/#projects" className="hover:text-foreground">
+                projects
               </Link>
-              <Link href="/case-studies" className="hover:text-accent">
-                case studies
+              <Link href="/skills" className="hover:text-foreground">
+                prompts
               </Link>
-              <Link href="/now" className="hover:text-accent">
-                now
-              </Link>
-              <Link href="/about" className="hover:text-accent">
+              <Link href="/about" className="hover:text-foreground">
                 about
               </Link>
             </nav>

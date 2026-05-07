@@ -92,6 +92,24 @@ export const projects: Project[] = [
     order: 3,
   },
   {
+    title: "Talent Sourcer",
+    slug: "talent-sourcer",
+    status: "prototype",
+    category: "personal-ai",
+    oneliner:
+      "Claude turns a role brief into Boolean LinkedIn searches, scores returned profiles against the role rubric, and drafts outreach in three voice registers.",
+    role: "Sole engineer",
+    year: "2026",
+    stack: ["Claude Sonnet", "Python", "LinkedIn search", "Streamlit-style UI"],
+    ai_components: [
+      "Claude generates Boolean search variants from a role brief",
+      "candidate profiles scored against role-specific rubric (0–100)",
+      "outreach draft in three registers: warm / direct / peer-to-peer",
+    ],
+    featured: true,
+    order: 4,
+  },
+  {
     title: "Meeting Copilot",
     slug: "meeting-copilot",
     status: "live",
@@ -107,7 +125,7 @@ export const projects: Project[] = [
       "allow-list system prompt that refuses to fabricate sections",
     ],
     featured: true,
-    order: 4,
+    order: 5,
   },
   {
     title: "Bob Coach",
@@ -125,7 +143,7 @@ export const projects: Project[] = [
       "session-level summary + per-turn flags surfaced to the operator",
     ],
     featured: true,
-    order: 5,
+    order: 6,
   },
   {
     title: "Job Radar",
@@ -143,7 +161,7 @@ export const projects: Project[] = [
       "calibration set + weekly drift regression",
     ],
     featured: true,
-    order: 6,
+    order: 7,
   },
   {
     title: "BPS Generator",
@@ -161,7 +179,7 @@ export const projects: Project[] = [
       "post-generation validator flags unsourced claims",
     ],
     featured: true,
-    order: 7,
+    order: 8,
   },
   {
     title: "Glance",
@@ -179,7 +197,25 @@ export const projects: Project[] = [
       "next-question suggester anchored to the rendered metric set",
     ],
     featured: true,
-    order: 8,
+    order: 9,
+  },
+  {
+    title: "MRV Gap Analysis",
+    slug: "mrv-gap-analysis",
+    status: "prototype",
+    category: "analytics",
+    oneliner:
+      "Public research brief on Philippine climate-measurement infrastructure. Claude as research-synthesis partner across 30+ source documents — structured extraction, citation attribution, gap matrix.",
+    role: "Sole researcher",
+    year: "2026",
+    stack: ["Claude Sonnet", "Python", "PDF extractor", "structured-output parser"],
+    ai_components: [
+      "parallel Claude calls extracting structured claims from each source",
+      "citation-anchored gap statements — every gap traces to a source paragraph",
+      "comparative gap matrix across agencies and instrument types",
+    ],
+    featured: true,
+    order: 10,
   },
   {
     title: "Vital",
@@ -197,7 +233,7 @@ export const projects: Project[] = [
       "feeds the personal-AI bot for context-aware health prompts",
     ],
     featured: true,
-    order: 9,
+    order: 11,
   },
   {
     title: "Throughline",
@@ -215,7 +251,7 @@ export const projects: Project[] = [
       "offer analysis: parse offer letter → comp benchmark → negotiation script",
     ],
     featured: true,
-    order: 10,
+    order: 12,
   },
   {
     title: "Freedom Park",
@@ -223,7 +259,7 @@ export const projects: Project[] = [
     status: "active",
     category: "creative-lab",
     oneliner:
-      "Solo cozy college-life pixel-art sim where Claude is design partner, Gemini paints backgrounds, and Aseprite handles revisions — an AI-collaborative asset pipeline.",
+      "Solo cozy college-life pixel-art sim. Claude is design partner, Gemini paints backgrounds, Aseprite handles revisions — an AI-collaborative asset pipeline.",
     role: "Solo dev",
     year: "2026",
     stack: ["Godot 4", "GDScript", "Claude Sonnet", "Gemini", "Aseprite"],
@@ -234,25 +270,25 @@ export const projects: Project[] = [
     ],
     hero: "/projects/freedom-park/classroom.png",
     featured: true,
-    order: 11,
+    order: 13,
   },
   {
-    title: "Altograph",
-    slug: "altograph",
+    title: "CCET Explorer",
+    slug: "ccet-explorer",
     status: "live",
     category: "creative-lab",
     oneliner:
-      "Solo environmental analytics consultancy with a public CCET (climate budget) explorer as the flagship credibility artifact.",
-    role: "Founder",
+      "Public visualization of the Philippine national climate budget. Claude Code did the data-pipeline scaffolding; the dataset and views are designed for non-technical readers.",
+    role: "Builder",
     year: "2024–2026",
-    stack: ["HTML/CSS/JS", "Claude Code", "Render", "Formspree"],
+    stack: ["HTML/CSS/JS", "Claude Code", "Render", "DBM CCET dataset"],
     ai_components: [
-      "Claude Code for data-pipeline scaffolding",
-      "Claude for MRV analysis drafting and SEO content",
+      "Claude Code for ETL scaffolding from raw DBM CCET tables",
+      "Claude for chart-narration drafts surfaced alongside each view",
     ],
     links: [{ label: "altographanalytics.com", href: "https://altographanalytics.com" }],
     featured: true,
-    order: 12,
+    order: 14,
   },
   {
     title: "Forge",
@@ -270,7 +306,7 @@ export const projects: Project[] = [
       "experiment dashboard tracking quality vs hosted Claude",
     ],
     featured: true,
-    order: 13,
+    order: 15,
   },
   {
     title: "Helm",
@@ -288,7 +324,7 @@ export const projects: Project[] = [
       "post-trade journal entry generated per fill, indexed for review",
     ],
     featured: true,
-    order: 14,
+    order: 16,
   },
 ];
 

@@ -25,9 +25,9 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 14px;
-  line-height: 1.7;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -39,8 +39,12 @@ body {
 
 @media (min-width: 640px) {
   body {
-    font-size: 15px;
+    font-size: 16px;
   }
+}
+
+code, pre, .font-mono {
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @keyframes blink {
@@ -53,10 +57,17 @@ body {
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .fade-up {
   animation: fade-up 0.5s ease-out both;
+}
+
+/* subtle ambient glow on hero */
+.ambient-glow {
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(95, 217, 232, 0.08), transparent 50%),
+    radial-gradient(ellipse at 80% 0%, rgba(95, 217, 232, 0.04), transparent 60%);
 }
