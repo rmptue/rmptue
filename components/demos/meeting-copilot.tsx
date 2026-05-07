@@ -77,19 +77,19 @@ export default function MeetingCopilotDemo() {
             <span className="text-muted">speaker_1:</span>{" "}
             {isRaw ? (
               <span className="text-foreground/85">
-                also add a{" "}
                 <span className="bg-red-500/15 text-red-300">
-                  Risks &amp; Mitigations section
+                  uh, like, you know,
                 </span>{" "}
-                — the model wasn&apos;t asked for one
+                great. let&apos;s also talk about the q4 roadmap before we
+                wrap.
               </span>
             ) : (
               <span className="text-foreground/90">
-                also add a{" "}
-                <span className="bg-accent/15 text-accent">
-                  [refused — not on allow-list]
-                </span>{" "}
-                — the model wasn&apos;t asked for one
+                great. let&apos;s also talk about the q4 roadmap before we
+                wrap.{" "}
+                <span className="text-[10.5px] text-muted italic">
+                  [filler stripped]
+                </span>
               </span>
             )}
           </div>
@@ -97,8 +97,8 @@ export default function MeetingCopilotDemo() {
 
         <div className="mt-4 border-t border-border pt-3 text-[11px] text-muted">
           {isRaw
-            ? "raw whisper output. acronym corruption, silence hallucination, fabricated section."
-            : "claude correction layer. glossary preserved, low-confidence dropped, allow-list enforced."}
+            ? "raw whisper output. acronym corruption, silence hallucination, filler verbatim."
+            : "claude correction layer. glossary preserved, low-confidence dropped, filler stripped."}
         </div>
       </Mockup>
       <Flow

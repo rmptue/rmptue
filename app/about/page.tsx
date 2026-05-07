@@ -14,9 +14,10 @@ export default function AboutPage() {
       <section className="space-y-4 leading-[1.75] text-foreground/85">
         <p>
           Applied AI engineer with analytics roots. Multi-role analytics
-          professional across SaaS, healthcare, and ESG, now shipping
-          production Claude-powered systems for the same kind of
-          analytics-shaped problems I used to solve with dashboards.
+          professional across marketing, call-center operations, healthcare
+          operations, SaaS, and ESG — now shipping production Claude-powered
+          systems for the same analytics-shaped problems I used to solve with
+          dashboards.
         </p>
         <p>
           What I&apos;m interested in: context engineering, multi-model

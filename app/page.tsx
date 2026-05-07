@@ -13,9 +13,12 @@ export default function Home() {
         <h1 className="text-[24px] font-medium leading-[1.2] tracking-tight text-foreground sm:text-[30px] lg:text-[36px]">
           Production AI systems for analytics-shaped problems —{" "}
           <span className="text-foreground/55">
-            chiefs of staff, scoring engines, narrative pipelines.
+            chiefs of staff, scoring engines, narrative{" "}
+            <span className="whitespace-nowrap">
+              pipelines.
+              <TerminalCursor />
+            </span>
           </span>
-          <TerminalCursor />
         </h1>
         <p className="max-w-[62ch] text-[14.5px] leading-[1.65] text-foreground/65 sm:text-[15.5px]">
           Each project below ships with a clickable demo and a process flow
