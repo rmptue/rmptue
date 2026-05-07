@@ -1,0 +1,33 @@
+## what it is
+
+A health tracker built around a single observation: people don&apos;t log meals because typing them is annoying. Vital flips that — you point your phone camera at what you&apos;re about to eat, Claude vision identifies it, estimates macros, and writes the log. Same for gym sessions and weight.
+
+The data feeds into VANTAGE so the chief-of-staff bot can include health context in its nightly digests without me ever opening another app.
+
+## the AI architecture
+
+Claude vision does the heavy lift. The interesting design is keeping the model from over-claiming on identification confidence:
+
+- the prompt requires a confidence score per identified ingredient
+- low-confidence items surface in the UI as &quot;is this right?&quot; checkboxes the user can fix in one tap
+- macros are estimated from the corrected ingredient list, not the raw vision output
+
+This matters because food photos under-determine macros badly. Two grams of oil can change calorie count by 10%. The model doesn&apos;t pretend it can see oil — it asks.
+
+## why this and not another macro tracker
+
+Three reasons the existing apps are wrong:
+
+1. they make you type or scan barcodes; that friction is why people quit by week three
+2. they don&apos;t connect to anything else in your life — your phone tracker is a silo
+3. they don&apos;t use the data for anything beyond a daily total — no narrative review, no compounding context
+
+Vital fixes all three. Claude vision kills the typing. Supabase shared with VANTAGE kills the silo. A weekly Claude-narrated review (&quot;you ate cleaner this week than last; protein up 22%; the sunday brunch is your repeat carb spike&quot;) is the compounding context.
+
+## status
+
+Concept. Has a working photo → vision → macros prototype on web. Mobile build is the next phase, alongside the supabase schema design.
+
+## what i learned
+
+The right way to evaluate a vision-driven product isn&apos;t accuracy on a benchmark. It&apos;s the friction-to-log curve. If logging takes 4 seconds, people log; if it takes 40, they don&apos;t. The model&apos;s job is to win the friction war, even at the cost of some accuracy that the user can correct in the next two seconds anyway.

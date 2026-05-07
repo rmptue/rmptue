@@ -6,8 +6,8 @@ const STATUS_COLOR: Record<Project["status"], string> = {
   live: "text-accent",
   active: "text-accent",
   shipped: "text-foreground/80",
-  "in-progress": "text-foreground/80",
-  archived: "text-muted",
+  prototype: "text-amber-300",
+  concept: "text-muted",
 };
 
 export function ProjectCard({ project }: { project: Project }) {

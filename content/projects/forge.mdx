@@ -1,0 +1,30 @@
+## what it is
+
+A local-LLM lab. Ollama runs Nemotron3:33b on a single GPU; six experiments are scoped to test where local models hold up against hosted Claude and where they don&apos;t. The flagship experiment is an **offline meeting-video analyzer** — screen-share recording in, structured insights out, never round-trips to a hosted model.
+
+Forge isn&apos;t a product; it&apos;s an answer-generator for the question &quot;when is local enough?&quot;
+
+## the experiments
+
+Each experiment ships a scoresheet — a fixed task corpus, a fixed rubric, the local model&apos;s scores, the hosted Claude scores, and the gap.
+
+- **offline meeting analyzer** — screen + audio capture → local Whisper + Nemotron3:33b → markdown brief. The reason this exists at all: meetings with sensitive information shouldn&apos;t leave the laptop.
+- **vault-RAG benchmark** — does deterministic keyword retrieval (the VANTAGE Vault pattern) beat local-embedding retrieval over the same corpus on real questions? My prior says yes; the benchmark will tell.
+- **draft-chain quality** — Nemotron drafts → Claude polishes vs Claude-only on long-form. Cost vs quality curve. If draft-chain is within 5% of pure Claude at 30% of the cost, that&apos;s worth knowing.
+- **voice-to-VANTAGE** — local streaming Whisper + on-device intent parsing → Discord call to VANTAGE. Latency budget: 1.2 seconds end-to-end.
+- **doc-vision local** — screenshot → local-vision LLM → structured extraction. For documents that can&apos;t leave the laptop.
+- **model-of-the-day** — pull a fresh open-weights model weekly, run it through the standard suite, archive the score sheet.
+
+## why this exists
+
+The honest answer: I want a falsifiable position on the local-vs-hosted question. Most takes are tribal — &quot;local is the future&quot; vs &quot;hosted will always win.&quot; Both are wrong as universals. Forge is the harness that produces actual numbers per task class.
+
+Practical answer: VANTAGE costs $5/month right now because it&apos;s small. If I add scheduled vision tasks (CCTV, screen recordings, meeting analysis), hosted costs scale fast. Local makes those workloads possible at all.
+
+## status
+
+Prototype. The meeting analyzer harness is running; the rest are queued. Scoresheet format is locked.
+
+## what i learned
+
+The right question for any local-model investigation isn&apos;t &quot;is it as good as Claude?&quot; — it almost never is. The right question is &quot;what&apos;s the cost-quality-privacy point at which it&apos;s the better choice?&quot; Some tasks have that point at zero (always use Claude). Some have it at infinity (always use local). The interesting ones have it in the middle.

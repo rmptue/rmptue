@@ -26,11 +26,13 @@ export default function NowPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-[15px] font-medium text-foreground">forge</h2>
+        <h2 className="text-[15px] font-medium text-foreground">
+          portfolio v2 (this site)
+        </h2>
         <p className="text-foreground/85">
-          Local-LLM lab. Ollama + Nemotron3:33b. Six experiments scoped;
-          flagship is an offline meeting-video analyzer (screen share →
-          insights, fully local, zero round-trip to a hosted model).
+          Interactive demo for every project, process flow diagrams, and
+          category grouping. Demos are clickable mockups — not the actual
+          tool, but enough to show how the UI flows.
         </p>
       </section>
 

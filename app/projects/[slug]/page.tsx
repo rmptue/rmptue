@@ -1,8 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { SectionLabel } from "@/components/SectionLabel";
 import { TechStack } from "@/components/TechStack";
+import { getDemoFor } from "@/components/demos";
 import { getAllSlugs, getProject } from "@/lib/projects";
 
 export function generateStaticParams() {
@@ -29,6 +31,14 @@ export async function generateMetadata({
   };
 }
 
+const STATUS_LABEL: Record<string, string> = {
+  live: "live",
+  active: "active",
+  shipped: "shipped",
+  concept: "concept",
+  prototype: "prototype",
+};
+
 export default async function ProjectPage({
   params,
 }: {
@@ -38,6 +48,7 @@ export default async function ProjectPage({
   const project = getProject(slug);
   if (!project) notFound();
 
+  const Demo = getDemoFor(slug);
   const { default: Body } = await import(`@/content/projects/${slug}.mdx`);
 
   return (
@@ -50,11 +61,11 @@ export default async function ProjectPage({
           ← projects
         </Link>
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h1 className="text-2xl font-medium tracking-tight text-foreground">
+          <h1 className="text-[26px] font-medium tracking-tight text-foreground">
             {project.title}
           </h1>
           <span className="text-[11px] uppercase tracking-wide text-accent">
-            {project.status}
+            {STATUS_LABEL[project.status] ?? project.status}
           </span>
         </div>
         <p className="max-w-[64ch] leading-[1.7] text-foreground/80">
@@ -83,6 +94,26 @@ export default async function ProjectPage({
           </div>
         )}
       </header>
+
+      {project.hero && !Demo && (
+        <div className="overflow-hidden rounded-lg border border-border">
+          <Image
+            src={project.hero}
+            alt={`${project.title} screenshot`}
+            width={1366}
+            height={768}
+            className="h-auto w-full"
+            priority
+          />
+        </div>
+      )}
+
+      {Demo && (
+        <section className="space-y-3">
+          <SectionLabel>demo</SectionLabel>
+          <Demo />
+        </section>
+      )}
 
       {project.ai_components.length > 0 && (
         <section className="space-y-3">

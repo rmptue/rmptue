@@ -1,0 +1,29 @@
+## what it is
+
+A mobile analytics companion for non-technical operators. You take a screenshot of any dashboard — Looker, Tableau, an Excel chart, a vendor portal — and Glance gives you the headline insight in plain language plus the question to ask next.
+
+Aimed at the analyst-adjacent audience: founders reading their own dashboards, ops managers reviewing weekly numbers, marketers looking at attribution screens. People who can read charts but don&apos;t always know what&apos;s anomalous and what&apos;s expected variance.
+
+## the AI architecture
+
+Claude vision over the screenshot is the core. The non-trivial engineering is the **next-question** layer.
+
+Most chart-reading errors come from stopping too early — &quot;revenue is down&quot; without &quot;but we lapped a promo&quot;. Glance&apos;s prompt requires the model to produce three things every time:
+
+1. **headline** — what the chart is showing, in one sentence
+2. **caveat** — what would change the headline (lapping effects, base distortion, recency cutoffs, missing dimensions)
+3. **next question** — the specific drill-down that resolves the caveat
+
+The caveat is the load-bearing piece. Without it, every output is &quot;the number went down/up&quot; and the user gains nothing they couldn&apos;t see themselves.
+
+## why mobile
+
+Most dashboards aren&apos;t looked at on a phone. Most *decisions* are made when someone&apos;s commuting, on a break, between meetings. Glance lives in the moment between &quot;I just glanced at the dashboard&quot; and &quot;I&apos;ll dig into it later (which never happens).&quot;
+
+## status
+
+Concept. Vision-prompt validation is the next experiment — does the caveat-then-next-question pattern hold up across chart types (line, bar, funnel, cohort, funnel)? If yes, the rest is product work.
+
+## what i learned
+
+The way you frame model output shapes whether users learn from it or not. &quot;Tell me what the chart says&quot; produces a paraphrase. &quot;Tell me the headline, the caveat, and the next question&quot; produces a thinking process. Same model, same chart — different output structure, different value.

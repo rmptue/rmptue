@@ -1,0 +1,26 @@
+## what it is
+
+A reviewer for AI-pair-programming sessions. You feed it a Claude Code session log; it scores each turn against a fixed anti-pattern rubric and surfaces the moments the agent went sideways before they compounded into a wasted hour.
+
+Built solo for the IBM Bob Hackathon, submitted May 2 2026, awaiting judging. The interesting work isn&apos;t the parsing — it&apos;s the rubric.
+
+## the rubric
+
+Six anti-patterns, each defined narrowly enough that Claude can detect them without judgment calls:
+
+- **scope drift** — agent expands the task beyond what the operator asked
+- **premature mocking** — agent reaches for mocks before reading the actual failure
+- **eager refactor** — agent restructures working code while fixing an unrelated bug
+- **fabricated context** — agent claims a file exists, a function is called somewhere, a config has a value, without having read it
+- **silent fail-forward** — agent claims success without running the verification it promised
+- **runway burn** — agent spends turns on cosmetic improvements when the operator&apos;s deadline is visible in the log
+
+Each turn gets scored on each axis. Most turns score zero. The interesting ones don&apos;t.
+
+## why this matters
+
+The failure mode for agentic coding isn&apos;t a single wrong answer. It&apos;s a chain of small-but-confident misalignments that the operator only catches when something visible breaks. By then the budget is gone. A scoring layer over the session log makes the chain visible early — ideally the operator can intervene at the second turn rather than the twelfth.
+
+## what i learned
+
+Detect-and-flag is more useful than autonomous-correct here. The model that wrote the bad turn is the same model class as the model scoring it; asking it to self-correct in real time runs into the same failure mode that produced the bad turn. The split — scoring is offline, intervention is human — is what makes the system trustable.

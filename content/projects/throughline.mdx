@@ -1,0 +1,31 @@
+## what it is
+
+An AI career coach that gets better the more you use it — interview practice, offer analysis, and ranked job matches that all read from a persistent profile of who you are, what you&apos;ve done, and what you&apos;re trying to land.
+
+The thesis: ChatGPT can do any of these tasks once. None of them improve on the second use because there&apos;s no memory. Throughline is the long-context version.
+
+## the AI architecture
+
+A user profile is the central artifact — past roles, skill claims with evidence anchors, target companies, comp expectations, interview history. Every chat turn loads it. Every offer parsed updates it. Every interview practice session adjusts the rubric weights.
+
+Three modes:
+
+**interview practice** — the coach picks a question type weighted by the user&apos;s weaker rubric dimensions, runs a back-and-forth, scores the answer at the end. Scores feed back into the profile so the next session targets the next-weakest area.
+
+**offer analysis** — upload an offer letter, the coach extracts comp components, benchmarks against role and location, identifies negotiation leverage, drafts a script in the user&apos;s voice register.
+
+**match feed** — opens scored against the profile by the same scoring engine that powers Job Radar (separate project), but with the profile&apos;s richer context as input.
+
+## why a portfolio, not a single app
+
+Throughline for Work is the first sibling. Throughline for Gifts (priority 2, Q4 2026), Throughline for Play (year 2 Q1), and Throughline for Talk (year 2 Q2+) share infrastructure: same Supabase, same auth, same Claude integration, same persistent-profile pattern. Each app targets a different decision class — career, gift-giving, gaming choices, hard conversations — but the infrastructure is paid for once.
+
+The portfolio thesis is that AI apps which solve one specific recurring decision with persistent memory beat ChatGPT on retention because the user&apos;s context compounds. The breakthrough metric isn&apos;t MAU — it&apos;s what % of users who returned in month 6 had also returned in month 1.
+
+## status
+
+Concept. 3-month solo bootstrap target for Throughline for Work. Pricing model: $29/month subscription plus a $99 &quot;Negotiation Pack&quot; one-time unlock that proves willingness-to-pay before subscription retention is established.
+
+## what i learned
+
+Persistent context is the only durable moat against the foundation models for consumer AI apps. Anything Claude can do in one chat, Claude can do for everyone next week. Anything that requires knowing who *you* are over months — your interview history, your past gifts, your relationship with that one cousin — only works when the app holds the substrate.

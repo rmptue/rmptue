@@ -2,12 +2,12 @@ import Link from "next/link";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SectionLabel } from "@/components/SectionLabel";
 import { TerminalCursor } from "@/components/TerminalCursor";
-import { getFeatured } from "@/lib/projects";
+import { CATEGORY_LABEL, getByCategory } from "@/lib/projects";
 
 export default function Home() {
-  const featured = getFeatured();
+  const groups = getByCategory();
   return (
-    <div className="space-y-14 sm:space-y-16">
+    <div className="space-y-14 sm:space-y-20">
       <section className="fade-up space-y-3">
         <h1 className="text-[15px] font-medium text-foreground">
           <span className="text-accent">$</span> joshua chua
@@ -18,34 +18,37 @@ export default function Home() {
         </p>
         <p className="max-w-[60ch] pt-3 leading-[1.7] text-foreground/75">
           i build production claude-powered systems — chiefs of staff,
-          correction pipelines, scoring engines, context substrates. some of
-          them are listed below.
+          correction pipelines, scoring engines, context substrates. each
+          project below has a clickable demo and a process flow showing
+          how the model fits in.
         </p>
       </section>
 
-      <section className="space-y-5">
-        <SectionLabel>projects</SectionLabel>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {featured.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
-          ))}
-        </div>
-      </section>
+      {groups.map(({ category, items }) => (
+        <section key={category} className="space-y-5">
+          <SectionLabel>{CATEGORY_LABEL[category]}</SectionLabel>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {items.map((project) => (
+              <ProjectCard key={project.slug} project={project} />
+            ))}
+          </div>
+        </section>
+      ))}
 
       <section className="space-y-3">
-        <SectionLabel glyph="$">now building</SectionLabel>
+        <SectionLabel glyph="$">now</SectionLabel>
         <ul className="space-y-2 text-foreground/80">
           <li>
             <span className="text-muted">→</span> igloo engagement — supply
-            chain analytics, claude code for pipeline scaffolding
+            chain analytics, claude code for pipeline scaffolding (NDA)
           </li>
           <li>
-            <span className="text-muted">→</span> forge — local-llm lab,
-            ollama + nemotron3:33b, offline meeting-video analyzer
+            <span className="text-muted">→</span> mrv gap analysis — public
+            research brief, claude as research-synthesis partner
           </li>
           <li>
-            <span className="text-muted">→</span> mrv gap analysis — claude
-            as research-synthesis partner across 30+ sources
+            <span className="text-muted">→</span> portfolio v2 (this site) —
+            interactive demos for every project
           </li>
         </ul>
         <Link

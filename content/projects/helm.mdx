@@ -1,0 +1,25 @@
+## what it is
+
+A paper-trading bot for futures contracts. A deterministic signal engine emits candidate trades; Claude is the **discretionary filter** — it reads each candidate against a rubric and either approves or rejects with a written rationale. Every fill produces a journal entry indexed for review.
+
+Sandbox only. Never goes live.
+
+## the AI architecture
+
+The split between deterministic and discretionary is the whole point. Trading systems usually go fully algorithmic (rules all the way down) or fully discretionary (a human reads charts). Helm tests the middle: rules generate candidates, an LLM with a written-down rubric decides whether each one is takeable in current context.
+
+The rubric covers things rules struggle with — macro print windows, regime alignment, multi-timeframe confluence, sentiment-news overlap, position correlation against existing exposure. Each is a sentence or two in the prompt; the model checks them in order and refuses the trade if any fail.
+
+The journal is the second-half product. Every fill, every reject, with the rationale, indexed by symbol and regime. After a quarter, the journal becomes a corpus the operator can query: &quot;show me every short setup the rubric rejected this month, ranked by counterfactual P&amp;L.&quot;
+
+## why this is interesting
+
+It&apos;s a clean test of whether an LLM can be useful as a *filter* layer over a deterministic system. The classic failure mode for LLM trading is using the model to *generate* the trade — too much uncertainty, too much hallucination room. Filtering is narrower: the candidate is concrete, the rubric is fixed, the output is a yes/no plus a paragraph. The model is doing exactly what it&apos;s good at.
+
+## status
+
+Prototype. Paper-trading only, by design. Going live would require a much higher bar of validation than I&apos;m willing to build alone.
+
+## what i learned
+
+The cleanest LLM applications are the ones where the model isn&apos;t deciding what to do — it&apos;s deciding whether to do something already proposed. Filter is a much smaller surface area than generator, and the failure modes are more legible.
