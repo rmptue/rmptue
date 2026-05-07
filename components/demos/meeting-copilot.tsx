@@ -33,16 +33,20 @@ export default function MeetingCopilotDemo() {
             <span className="text-muted">speaker_1:</span>{" "}
             {isRaw ? (
               <span className="text-foreground/85">
-                so the <span className="bg-red-500/15 text-red-300">MV&amp;A</span> for q3
-                was driven by the{" "}
-                <span className="bg-red-500/15 text-red-300">DPS</span> rollout in{" "}
-                <span className="bg-red-500/15 text-red-300">manilla</span>
+                let&apos;s walk through{" "}
+                <span className="bg-red-500/15 text-red-300">OK-R&apos;s</span>{" "}
+                for q3 and the{" "}
+                <span className="bg-red-500/15 text-red-300">Atlus</span>{" "}
+                migration in{" "}
+                <span className="bg-red-500/15 text-red-300">Manilla</span>
               </span>
             ) : (
               <span className="text-foreground/90">
-                so the <span className="bg-accent/15 text-accent">MD&amp;A</span> for q3
-                was driven by the{" "}
-                <span className="bg-accent/15 text-accent">BPS</span> rollout in{" "}
+                let&apos;s walk through{" "}
+                <span className="bg-accent/15 text-accent">OKRs</span> for q3
+                and the{" "}
+                <span className="bg-accent/15 text-accent">Atlas</span>{" "}
+                migration in{" "}
                 <span className="bg-accent/15 text-accent">Manila</span>
               </span>
             )}
@@ -64,7 +68,7 @@ export default function MeetingCopilotDemo() {
             <span className="mr-2 text-muted">[00:34]</span>
             <span className="text-muted">speaker_2:</span>{" "}
             <span className="text-foreground/90">
-              right, and we should have the variance writeup ready by friday.
+              right, and we should have the action-items doc ready by friday.
             </span>
           </div>
 
@@ -73,17 +77,19 @@ export default function MeetingCopilotDemo() {
             <span className="text-muted">speaker_1:</span>{" "}
             {isRaw ? (
               <span className="text-foreground/85">
-                we also want a{" "}
+                also add a{" "}
                 <span className="bg-red-500/15 text-red-300">
-                  Technical Debt section
+                  Risks &amp; Mitigations section
                 </span>{" "}
-                added to the writeup
+                — the model wasn&apos;t asked for one
               </span>
             ) : (
               <span className="text-foreground/90">
-                we also want a{" "}
-                <span className="bg-accent/15 text-accent">[refused — not on allow-list]</span>{" "}
-                added to the writeup
+                also add a{" "}
+                <span className="bg-accent/15 text-accent">
+                  [refused — not on allow-list]
+                </span>{" "}
+                — the model wasn&apos;t asked for one
               </span>
             )}
           </div>

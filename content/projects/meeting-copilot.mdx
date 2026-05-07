@@ -16,7 +16,7 @@ The case study is the iteration story. Every fix was a prompt change, not a code
 
 **Template fabrication.** The model was inventing a &quot;Technical Debt&quot; section in the output when nothing in the source supported it. Soft instructions like &quot;don&apos;t make things up&quot; failed three times. Fix: an **allow-list of permitted output sections**. Anything not on the list gets refused. The instruction shifted from &quot;don&apos;t fabricate&quot; (a non-instruction) to &quot;the only valid sections are these.&quot;
 
-**Project-name corruption.** &quot;MD&amp;A&quot; would surface as &quot;MV&amp;A&quot;, &quot;BPS&quot; as &quot;DPS&quot;. Fix: a glossary injected per session. Acronyms are listed verbatim and the prompt forbids edits to anything matching the glossary.
+**Project-name corruption.** Internal acronyms and project names get scrambled — &quot;OKRs&quot; rendered as &quot;OK-R&apos;s&quot;, project names like &quot;Atlas&quot; mishearing as &quot;Atlus&quot;. Fix: a glossary injected per session. Names and acronyms are listed verbatim and the prompt forbids edits to anything matching the glossary.
 
 ## architecture
 
@@ -36,7 +36,7 @@ mic / system audio
 
 ## why sonnet for correction
 
-Haiku lost too much fidelity on the harder edits — it would correct &quot;BPS&quot; to &quot;BPF&quot; instead of preserving the glossary term. Sonnet&apos;s instruction-following is the load-bearing thing here, not raw intelligence. The correction layer is judgment-heavy, not knowledge-heavy.
+Haiku lost too much fidelity on the harder edits — it would &quot;correct&quot; glossary terms it shouldn&apos;t touch (rewriting an in-session acronym to its closest dictionary word). Sonnet&apos;s instruction-following is the load-bearing thing here, not raw intelligence. The correction layer is judgment-heavy, not knowledge-heavy.
 
 ## what i learned
 
