@@ -1,0 +1,40 @@
+## what it is
+
+A local Windows desktop app that ingests email and calendar data from multiple accounts, stores it in SQLite, and exposes the unified view to Claude as an MCP server. One surface for inbox + calendar across every role, queryable by Claude on demand.
+
+V0 shipped May 2026 with two Gmail accounts wired in, a Tkinter GUI for account management, fifteen MCP tools exposed to Claude Desktop, and fifty passing tests. Outlook accounts are parked for v1 — tenant-level IMAP basic auth blocks force the OAuth/Entra path.
+
+## the AI angle
+
+Beacon itself does **no LLM calls** — it&apos;s a dumb-but-comprehensive data layer. The AI work happens in the consumer layer: Claude Desktop runs the MCP server in the background and pulls inbox + calendar context whenever the conversation calls for it. Other tools in the stack (Sentinel, VANTAGE) can query the same MCP surface for their own purposes.
+
+This split is deliberate. The data layer should be boring, fast, and trusted. The smart layer should be swappable. Tomorrow&apos;s assistant queries the same MCP server.
+
+## hard rules
+
+These are tested invariants, not aspirations.
+
+- **read-only IMAP.** `select(readonly=True)` plus `BODY.PEEK` only. Server-side `\Seen` flag is never mutated. Verified by a regression test (`test_imap_uses_body_peek_not_body`).
+- **no MCP write tools.** Fifteen read tools, two local-only mutations (block-sender, set-RSVP). The local-only mutations write to the SQLite layer; nothing ever goes back to Gmail or the calendar provider.
+- **passwords in keyring.** Windows Credential Manager via `keyring`. Never in DB, logs, or repo.
+- **stdout reserved for MCP stdio.** No `print()` in the serve path. All logs via `structlog` to stderr or rotating file.
+- **no telemetry, no LLM calls inside Beacon.** External services are limited to the user&apos;s own accounts.
+
+## what shipped beyond the original plan
+
+- **right-click block sender / domain in inbox.** Local blocklist purges existing matching messages and prevents future syncs from re-storing them. IMAP stays read-only — &quot;blocked&quot; means &quot;hidden from Beacon,&quot; not deleted from the server.
+- **local RSVP on calendar events.** Going / Not going / Maybe buttons. Saved to DB only, never sent back to organizers. A private RSVP state without committing.
+- **auto-detect calendar invites from email.** IMAP adapter extracts `text/calendar` MIME parts; sync layer parses VEVENT payloads and creates `calendar_events` rows tagged with `source='email-invite'`.
+- **rule-based event categorization.** Interview / work / personal / other, on title + description + account name. Manual overrides stick across re-syncs.
+
+## why this exists
+
+Multiple simultaneous roles plus academic and personal mailboxes — at least four accounts active at any time, more as roles cycle. Calendar is fragmented across the same surface. Native clients require tab-switching and don&apos;t talk to Claude. Sentinel watches live chat (Slack, Teams) but isn&apos;t an inbox tool. VANTAGE is the strategic chief of staff, not an inbox triage layer.
+
+Beacon fills the gap between them: ingestion + storage + MCP exposure for email and calendar. Once the data layer exists, every other AI tool in the stack gets email and calendar context for free.
+
+## what i learned
+
+The right unit for &quot;AI infrastructure&quot; isn&apos;t the model call — it&apos;s the data layer that the model reads from. Beacon has zero LLM calls inside it; its value is entirely in being the substrate that Claude can query reliably. Most of the engineering effort went into the read-only invariants, the dedup logic, the IMAP edge cases. None of that is glamorous, but it&apos;s what makes the model layer work without surprises.
+
+The MCP surface is the API contract. Every read tool has a typed response, a clear failure mode, and a regression test. Treating the MCP server like any other stable API — stdout-clean, schema-versioned, well-tested — is the difference between an MCP that works and one that breaks every time you update Claude Desktop.

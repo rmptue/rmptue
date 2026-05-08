@@ -92,6 +92,32 @@ export const projects: Project[] = [
     order: 3,
   },
   {
+    title: "Beacon",
+    slug: "beacon",
+    status: "live",
+    category: "personal-ai",
+    oneliner:
+      "Local Windows app that aggregates email + calendar across multiple accounts and exposes the unified view to Claude as an MCP server — 15 read tools, zero server-side mutations.",
+    role: "Sole engineer",
+    year: "2026",
+    stack: [
+      "Python",
+      "Tkinter",
+      "SQLite",
+      "MCP",
+      "IMAP",
+      "ICS",
+      "apscheduler",
+    ],
+    ai_components: [
+      "MCP server with 15 read tools — Claude queries inbox + calendar on demand",
+      "rule-based event categorizer (interview / work / personal / other) with manual overrides",
+      "auto-detect calendar invites from email — VEVENT extracted from text/calendar MIME parts",
+    ],
+    featured: true,
+    order: 3.5,
+  },
+  {
     title: "Talent Sourcer",
     slug: "talent-sourcer",
     status: "prototype",

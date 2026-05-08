@@ -5,6 +5,7 @@ const REGISTRY: Record<string, ComponentType> = {
   vantage: dynamic(() => import("./vantage")),
   vault: dynamic(() => import("./vault")),
   sentinel: dynamic(() => import("./sentinel")),
+  beacon: dynamic(() => import("./beacon")),
   "talent-sourcer": dynamic(() => import("./talent-sourcer")),
   "meeting-copilot": dynamic(() => import("./meeting-copilot")),
   "bob-coach": dynamic(() => import("./bob-coach")),
