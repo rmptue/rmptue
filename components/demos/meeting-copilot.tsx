@@ -98,7 +98,7 @@ export default function MeetingCopilotDemo() {
         <div className="mt-4 border-t border-border pt-3 text-[11px] text-muted">
           {isRaw
             ? "raw whisper output. acronym corruption, silence hallucination, filler verbatim."
-            : "claude correction layer. glossary preserved, low-confidence dropped, filler stripped."}
+            : "ollama / gemma 4 correction (local). glossary preserved, low-confidence dropped, filler stripped."}
         </div>
       </Mockup>
       <Flow
@@ -106,7 +106,7 @@ export default function MeetingCopilotDemo() {
           { label: "audio capture", sub: "30s rolling chunks" },
           { label: "faster-whisper", sub: "STT, GPU local" },
           { label: "confidence gate", sub: "drop low-conf" },
-          { label: "claude sonnet", sub: "correction layer", highlight: true },
+          { label: "ollama / gemma 4", sub: "local correction · $0", highlight: true },
           { label: "transcript", sub: "diarized + corrected" },
         ]}
         direction="right"

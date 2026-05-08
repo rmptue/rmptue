@@ -1,8 +1,16 @@
 ## what it is
 
-A two-model pipeline running locally on a single laptop. Faster-Whisper (GPU) handles speech-to-text. Claude Sonnet runs a **correction layer** over rolling chunks — fixing diarization confusion, hallucinated content during silence, project-name corruption, and template fabrication.
+A two-model pipeline running fully local on a single laptop. Faster-Whisper (GPU) handles speech-to-text. **Gemma 4 via Ollama** runs a **correction layer** over rolling chunks — fixing diarization confusion, hallucinated content during silence, glossary-term corruption, and template fabrication. Zero API calls, zero per-meeting cost.
 
 The interesting engineering is the correction prompt. It&apos;s an allow-list-based system prompt that refuses to invent sections the source audio doesn&apos;t support.
+
+## why local for the correction layer
+
+The correction layer fires on every rolling chunk — call it once every 30 seconds, four hours of meetings a day, that&apos;s 480 inference calls daily on a high-judgment task. On hosted Sonnet, that&apos;s real money. On Gemma 4 via Ollama, it&apos;s electricity.
+
+Local also matters for the data. Meeting audio includes things that shouldn&apos;t leave the laptop — names, internal projects, draft strategy — and the cleanest privacy posture is to never send any of it over the wire. The correction layer reads transcripts; transcripts touch sensitive content; the layer stays local.
+
+The trade-off: Gemma 4 instruction-follows worse than Sonnet on edge cases. The correction prompt has to do more work — more explicit rules, tighter glossaries, fewer assumptions about what the model will figure out. The next section is the bug log that shaped that prompt.
 
 ## the bug-driven build log
 
@@ -10,13 +18,13 @@ The case study is the iteration story. Every fix was a prompt change, not a code
 
 **Diarization confusion.** Whisper would attribute one speaker&apos;s line to another. Fix: a speaker-aware correction prompt that tags lines with confidence and refuses to swap speakers without strong textual evidence (named address, pronoun chain, prior turn).
 
-**Silence hallucination.** During quiet stretches, Whisper invents content (&quot;Thank you. Thanks for watching.&quot; appearing in meetings that have neither). Fix: a confidence-threshold gate before Claude sees the chunk. Low-confidence segments get dropped, not corrected.
+**Silence hallucination.** During quiet stretches, Whisper invents content (&quot;Thank you. Thanks for watching.&quot; appearing in meetings that have neither). Fix: a confidence-threshold gate before Gemma sees the chunk. Low-confidence segments get dropped, not corrected.
 
 **Location-inversion bug.** &quot;She&apos;s in the Manila office&quot; would render as &quot;She&apos;s in the office in Manila&quot; — a meaning-preserving edit in most cases, but in one meeting it inverted who was where. Fix: a prompt-level constraint on entity references. The model is allowed to fix grammar, not rewrite spatial relationships.
 
-**Template fabrication.** The model was inventing a &quot;Technical Debt&quot; section in the output when nothing in the source supported it. Soft instructions like &quot;don&apos;t make things up&quot; failed three times. Fix: an **allow-list of permitted output sections**. Anything not on the list gets refused. The instruction shifted from &quot;don&apos;t fabricate&quot; (a non-instruction) to &quot;the only valid sections are these.&quot;
+**Template fabrication.** The model was inventing extra sections in the writeup output when nothing in the source supported them. Soft instructions like &quot;don&apos;t make things up&quot; failed three times. Fix: an **allow-list of permitted output sections**. Anything not on the list gets refused. The instruction shifted from &quot;don&apos;t fabricate&quot; (a non-instruction) to &quot;the only valid sections are these.&quot;
 
-**Project-name corruption.** Internal acronyms and project names get scrambled — &quot;OKRs&quot; rendered as &quot;OK-R&apos;s&quot;, project names like &quot;Atlas&quot; mishearing as &quot;Atlus&quot;. Fix: a glossary injected per session. Names and acronyms are listed verbatim and the prompt forbids edits to anything matching the glossary.
+**Glossary-term corruption.** Internal acronyms and project names get scrambled — &quot;OKRs&quot; rendered as &quot;OK-R&apos;s&quot;, project names like &quot;Atlas&quot; mishearing as &quot;Atlus&quot;. Fix: a glossary injected per session. Names and acronyms are listed verbatim and the prompt forbids edits to anything matching the glossary. Especially load-bearing on a smaller local model — Gemma will helpfully &quot;fix&quot; an unfamiliar acronym to its nearest dictionary word unless explicitly told not to.
 
 ## architecture
 
@@ -24,9 +32,9 @@ The case study is the iteration story. Every fix was a prompt change, not a code
 mic / system audio
   → ffmpeg capture
   → 30-second rolling chunks
-  → Faster-Whisper (large-v3, GPU)
+  → Faster-Whisper (large-v3, local GPU)
   → confidence gate
-  → Claude Sonnet correction
+  → Ollama / Gemma 4 correction (local)
       with: speaker-aware rules
             entity-preservation constraints
             output-section allow-list
@@ -34,14 +42,14 @@ mic / system audio
   → markdown transcript with diarization
 ```
 
-## why sonnet for correction
-
-Haiku lost too much fidelity on the harder edits — it would &quot;correct&quot; glossary terms it shouldn&apos;t touch (rewriting an in-session acronym to its closest dictionary word). Sonnet&apos;s instruction-following is the load-bearing thing here, not raw intelligence. The correction layer is judgment-heavy, not knowledge-heavy.
+Nothing leaves the laptop.
 
 ## what i learned
 
-Allow-lists beat instructions. &quot;Don&apos;t do X&quot; is a soft constraint that the model rebalances against helpfulness. &quot;The only valid outputs are A, B, C&quot; is a hard constraint with no helpfulness-shaped escape hatch.
+Allow-lists beat instructions. &quot;Don&apos;t do X&quot; is a soft constraint that the model rebalances against helpfulness. &quot;The only valid outputs are A, B, C&quot; is a hard constraint with no helpfulness-shaped escape hatch. This is even more true on smaller local models, which under-resist soft instructions more than the frontier ones.
 
-A second model is worth its cost when the first model&apos;s failures are systematic and judgable. STT errors are systematic (silence hallucination, low-confidence speakers). They&apos;re also externally judgable from the chunk itself. That&apos;s the regime where a correction layer wins.
+A second model is worth running when the first model&apos;s failures are systematic and judgable. STT errors are systematic (silence hallucination, low-confidence speakers). They&apos;re also externally judgable from the chunk itself. That&apos;s the regime where a correction layer wins — and on a local model with effectively zero marginal cost, the bar for &quot;worth running&quot; is much lower than it would be on a hosted API.
+
+The cost-quality-privacy point matters per task. For Meeting Copilot, all three favor local: high call volume (cost), sensitive content (privacy), and the task is judgment-heavy in a way that Gemma 4 handles well enough once the prompt is tight. This is exactly the kind of decision the [Forge](/projects/forge) lab is built to surface — Meeting Copilot is one of its production answers.
 
 If a prompt change fixes a class of bugs, write down the class. Otherwise the next change re-introduces the bug for a different reason.

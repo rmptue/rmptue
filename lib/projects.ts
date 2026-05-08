@@ -141,14 +141,15 @@ export const projects: Project[] = [
     status: "live",
     category: "productivity",
     oneliner:
-      "Faster-Whisper for transcription, Claude for real-time correction of names, technical terms, and meeting context — running locally on a single laptop.",
+      "Faster-Whisper for transcription plus a local Ollama + Gemma 4 correction layer that fixes acronyms, glossary terms, and silence hallucination — fully local, zero API cost, runs on a single laptop.",
     role: "Sole engineer",
     year: "2025",
-    stack: ["Claude Sonnet", "Faster-Whisper", "Python", "ffmpeg", "local GPU"],
+    stack: ["Ollama", "Gemma 4", "Faster-Whisper", "Python", "ffmpeg", "local GPU"],
     ai_components: [
       "Faster-Whisper STT (local, GPU)",
-      "Claude Sonnet correction layer over rolling chunks",
+      "Gemma 4 via Ollama as the correction layer — local inference, zero per-call cost",
       "allow-list system prompt that refuses to fabricate sections",
+      "session glossary injected per meeting to preserve acronyms verbatim",
     ],
     featured: true,
     order: 5,
