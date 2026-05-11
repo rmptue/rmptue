@@ -1,0 +1,52 @@
+## what it is
+
+A commercial-property search tool built for an Australian wealth-management client. Brief in (state, sector, price range, yield, tenancy status, fifteen filter fields), ranked listings out. The interesting layer is the optional Claude Haiku re-rank that explains why each listing fits the client&apos;s actual criteria — not just whether it passes the boolean filter.
+
+V0 prototype shipped May 2026 with 226 listings across 5 Australian cities, alongside a 9-page scope document delivered to the client.
+
+## the AI architecture
+
+Two layers, deliberately separated.
+
+**Deterministic filter (always on).** Local PHP filter over a curated `listings.json` dataset. Fifteen filter fields per the client brief — listing type, price min/max, property type, keywords, leased/tenanted status, lease vacancy, yield %, state, suburb, floor area, land area. Sub-second response, runs entirely on the server, costs nothing. Yield-based price fallback when tenanted+yield is set but list price is POA.
+
+**Claude Haiku re-rank (toggleable).** When &quot;AI re-rank&quot; is on, the filtered listings get passed to Haiku with the client&apos;s natural-language brief. Haiku scores each listing for fit and writes a one-sentence rationale. Cost per search: ≈$0.0014. Passcode-gated so random visitors can&apos;t burn API spend.
+
+The split matters. A deterministic filter is fast, predictable, and free; an LLM re-rank handles the things a filter can&apos;t — &quot;within 20 min of a hospital&quot;, &quot;low-risk tenant profile&quot;, &quot;suits a self-managed super fund.&quot; Putting the LLM in front of the filter would be wasteful and slow; putting it after means it only ranks the already-relevant subset.
+
+## architecture
+
+```
+Browser ─→ index.html ─→ search.php ─→ listings.json (PHP filter)
+                                    └─→ [optional] Claude Haiku re-rank
+                                            ↓
+                                    ranked results + per-listing rationale
+```
+
+## data layer
+
+| Source | Listings | Path |
+|---|---|---|
+| commercialrealestate.com.au | 160 | ScraperAPI standard render (`render=true` + `country_code=au` cracks Akamai) |
+| Elders commercial Brisbane | 26 | Crawlbase + sitemap, server-rendered listing pages |
+| Multi-city snippets | 40 | Claude web-search fallback for SYD/MEL/PER/ADL coverage |
+
+Scraper-coverage findings shipped to the client in the scope doc — what works, what needs the paid tier (`realcommercial.com.au` requires ScraperAPI ultra-premium), what fails (Colliers, Knight Frank — JS-only, no listing data without a paid render budget).
+
+## hard rules
+
+- **Passcode-gated.** AI re-rank is behind an access code so random visitors can&apos;t generate API spend.
+- **API keys outside docroot.** Anthropic key + ScraperAPI key sit in `/home/altolqqd/rmptue_private/config.php`, outside the web root, unreadable by HTTP requests.
+- **Filter first, model second.** The LLM never sees the full corpus — it only sees pre-filtered candidates. Same haiku-routes-to-sonnet cost discipline as Sentinel, applied to a different stack.
+
+## status
+
+V0 prototype delivered with the scope PDF. Three-phase roadmap proposed for production: foundation (broader scraper coverage, prod hosting, detail-page fetches), realcommercial integration (ultra-premium tier), workflow features (saved searches, agent contact handoff, lease detail). Awaiting client decision.
+
+## what i learned
+
+The right framing for an LLM-in-the-product question is **where does the deterministic system end and the discretionary judgment begin?** In a property search, the filter handles &quot;is this even close to what they asked for.&quot; The LLM handles &quot;does it actually fit the person&apos;s situation.&quot; Those are different questions and they deserve different layers.
+
+Scraper coverage is where most property tools secretly fail. Promising &quot;every site&quot; without enumerating which sites and which payment tiers is how vaporware happens. The scope doc surfaces this honestly — here&apos;s what we can hit on a hobby ScraperAPI plan, here&apos;s what needs the business tier, here&apos;s what would never work without first-party API access.
+
+Toggleable AI is the right default for cost-conscious products. The client gets to choose per-search whether to spend the fraction-of-a-cent on Haiku, instead of paying for it on every page load.

@@ -118,6 +118,24 @@ export const projects: Project[] = [
     order: 3.5,
   },
   {
+    title: "Atelier",
+    slug: "atelier",
+    status: "concept",
+    category: "personal-ai",
+    oneliner:
+      "Personal project-orchestration system — five Claude Code subagent personas (Strategist, Designer, Builder, Critic, QA-Scribe) move markdown tasks through a queue. Local-only, vault-resident.",
+    role: "Sole architect",
+    year: "2026",
+    stack: ["Claude Code", "MCP", "Markdown", "YAML frontmatter", "Obsidian"],
+    ai_components: [
+      "five named Claude Code subagents — each a system prompt with a structured Next: block",
+      "hybrid routing: project templates define a default pipeline, each task can override with a reason",
+      "context separation per task — fresh subagent invocation prevents mental-model bleed-through",
+    ],
+    featured: true,
+    order: 3.7,
+  },
+  {
     title: "Talent Sourcer",
     slug: "talent-sourcer",
     status: "prototype",
@@ -207,6 +225,31 @@ export const projects: Project[] = [
     ],
     featured: true,
     order: 8,
+  },
+  {
+    title: "PropScout",
+    slug: "propscout",
+    status: "prototype",
+    category: "analytics",
+    oneliner:
+      "AU commercial-property aggregator built for a wealth-management client. 15-field local filter over a curated listings dataset, with an optional Claude Haiku re-rank layer that explains why each match fits the brief.",
+    role: "Sole engineer",
+    year: "2026",
+    stack: [
+      "Claude Haiku",
+      "PHP",
+      "Vanilla JS",
+      "ScraperAPI",
+      "Crawlbase",
+      "JSON dataset",
+    ],
+    ai_components: [
+      "Claude Haiku as toggleable re-rank layer over deterministic filter results",
+      "per-listing rationale written by Claude — why this matches the client's criteria",
+      "cost-conscious gating — ~$0.0014/search; AI only called when toggled, passcode-gated to prevent random spend",
+    ],
+    featured: true,
+    order: 7.5,
   },
   {
     title: "Glance",
@@ -307,6 +350,24 @@ export const projects: Project[] = [
     hero: "/projects/freedom-park/classroom.png",
     featured: true,
     order: 13,
+  },
+  {
+    title: "Mirastate",
+    slug: "mirastate",
+    status: "live",
+    category: "creative-lab",
+    oneliner:
+      "Personal archive of interactive simulations — climate, finance, biology, probability, Philippine systems, fictional physics. 75+ self-contained explorables shipped, Bret-Victor-style. Live at mirastate.com.",
+    role: "Solo dev",
+    year: "2026",
+    stack: ["Vanilla JS", "Canvas API", "D3 v7", "Claude Code", "Static deploy"],
+    ai_components: [
+      "Claude Code as the build-out engine — each sim a self-contained HTML file, one Claude-Code session per build",
+      "Claude-drafted methodology + citation footers for every sim — &quot;cool&quot; vs &quot;credible portfolio piece&quot; depends on this",
+      "category-routed prompt templates per sim shape (threshold, time-series, agent, cascade)",
+    ],
+    featured: true,
+    order: 13.5,
   },
   {
     title: "CCET Explorer",

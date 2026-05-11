@@ -1,0 +1,64 @@
+## what it is
+
+A personal project-orchestration system. Five named Claude Code subagents — Strategist, Designer, Builder, Critic, QA-Scribe — each with their own system prompt. Tasks live as markdown files in `tasks/{queued, in-progress, done}/`. Claude Code reads each task, invokes the appropriate persona, completes the work, and proposes routing to the next phase. I preside — accept defaults or re-route as needed.
+
+The metaphor is a studio: specialist craftspeople at their own bench. I&apos;m the studio owner. Projects move from bench to bench.
+
+Phase 0 — architecture locked. Phase 1 bootstrap prompt ready to run.
+
+## the five personas
+
+| Persona | The question it answers | Does NOT |
+|---|---|---|
+| **Strategist** | What&apos;s the actual problem and what should the answer look like? | Code, design, build |
+| **Designer** | How should this be structured? | Implement |
+| **Builder** | Make the thing | Skip design, re-litigate strategy |
+| **Critic** | Is this good, and is it the right approach? | QA-test, rewrite the work |
+| **QA / Scribe** | Does it work, and is it documented? | Review for taste |
+
+Each persona lives at `.claude/agents/<role>.md` with its own full system prompt and a required structured output tail — a `Next:` block proposing the next role with a reason.
+
+## the locked decisions
+
+1. **Routing = hybrid.** Project templates define a default pipeline. Each completed task either accepts the default next step or overrides with a reason. I review overrides before they auto-advance.
+
+2. **Personas = Claude Code subagents.** Native mechanism via `.claude/agents/*.md`, no custom dispatch logic needed.
+
+3. **Storage = markdown.** Tasks are markdown files with YAML frontmatter, no database. Human-readable, greppable, git-trackable, Obsidian-browsable. Falls back to plain text if every other layer breaks.
+
+4. **Local-only deployment.** Atelier runs when I open Claude Code at the desk. No VPS. No 24/7 pattern. Uses Claude Code (Anthropic&apos;s sanctioned harness) and MCP (sanctioned protocol) as intended.
+
+5. **Context separation per task.** Each task is a fresh subagent invocation with only explicitly-injected context from the prior role&apos;s output. Prevents one task&apos;s mental model from bleeding into the next and defeating role separation.
+
+## project templates
+
+| Template | Default pipeline |
+|---|---|
+| software-build | strategist → designer → builder → critic → qa-scribe → done |
+| analytics-deliverable | strategist → designer → builder → critic → qa-scribe → done |
+| content-piece | strategist → builder → critic → qa-scribe → done |
+| consultancy-engagement | strategist → designer → builder → critic → qa-scribe → done |
+
+## phase plan
+
+**Phase 1 — foundation.** Markdown-only. Folder structure, five subagent definitions, task schema + blank template, four project templates, README, one validation task: Strategist defines the Phase 2 MCP server architecture, completed end-to-end as workflow proof.
+
+**Phase 2 — MCP server.** Exposes `list_tasks`, `get_next_task`, `complete_task`, `advance_task`, `read_project_context`. Handles file-moves between queue stages. Locking on in-progress to prevent re-pickup.
+
+**Phase 3 — UI.** Next.js Kanban dashboard reading/writing the markdown files directly. Visual queue management. Override-approval flow. Local-only.
+
+**Phase 4 — real project rollout.** Migrate one in-flight project onto the queue. Tune persona prompts based on what their actual outputs look like. Add specialist personas as gaps emerge.
+
+## what makes this work
+
+Multi-agent orchestration without a custom harness. No OAuth gymnastics, no VPS, no detection cat-and-mouse. The system is just markdown files plus Claude Code&apos;s native subagent mechanism plus an MCP server in Phase 2. Every layer is something Anthropic ships.
+
+The cost discipline matters too. The whole system runs on an existing Claude Code subscription. No new infrastructure. Phase 1 has zero new dependencies — it&apos;s folders, markdown templates, and subagent definitions.
+
+## what i learned
+
+Personas need a question, not a job title. &quot;Strategist&quot; alone is too vague; &quot;the persona that answers &apos;what&apos;s the actual problem and what should the answer look like&apos;&quot; is testable. If a task&apos;s output doesn&apos;t answer that question, the persona drifted.
+
+Routing is where multi-agent systems usually break. A default pipeline plus a one-line override (with a reason field that the human reviews) catches the cases where the next step really should be different, without making every transition a decision.
+
+Context separation per task is what makes the system more than &quot;Claude with five hats.&quot; A single context carrying every prior output produces a single-flavor response no matter which persona is at the top of the prompt. Fresh invocations per task — with explicit, narrow injection — preserve the role distinction.

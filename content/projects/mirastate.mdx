@@ -1,0 +1,60 @@
+## what it is
+
+A personal archive of interactive simulations across every domain — climate, finance, biology, probability, Philippine systems, fictional physics. Each sim is its own self-contained HTML file. Visualization IS the output, not charts with numbers. Accurate enough to be educational, intentionally varied to be memorable.
+
+75+ sims shipped. Live at [mirastate.com](https://mirastate.com).
+
+## the AI angle
+
+Claude Code is the **build-out engine**. Every sim is a single Claude-Code session: I write the brief, Claude scaffolds the HTML / Canvas / D3, I iterate on the visual language, ship. The build velocity (averaging roughly six sims per autonomous sprint session) is the AI-engineering story — what used to be a weekend per sim is now a working session.
+
+Three discipline rules keep this from being &quot;Claude-slop with sliders&quot;:
+
+**Citation footer per sim.** Every sim ships with visible data sources in a `<details>` panel at the bottom. Non-negotiable. The line between &quot;cool toy&quot; and &quot;credible portfolio piece&quot; is whether a reader can trace the numbers back to a paper or a dataset.
+
+**Sim-shape-aware prompt templates.** Sims fall into four shape categories — threshold/dose-response, time/runway, network/agent, cascade/system-dynamics. Each shape has a different prompt template tuned to its visual idiom. A threshold sim wants a continuous dial and a fail-state animation; an agent sim wants a population grid and rule cards.
+
+**Methodology drafted, never copy-pasted.** Claude writes the first methodology pass for every sim. I rewrite it. The draft is faster than starting from blank; the rewrite is what keeps the prose recognizable.
+
+## architecture
+
+```
+mirastate.com
+└── index.html           # filterable archive grid + featured rail
+    ├── filter pills     # by domain (climate, finance, probability, PH, etc)
+    └── sim tile grid    # built / coming-soon, click-through
+        ↓
+sims/<slug>.html         # one self-contained file per sim
+    ├── HTML structure
+    ├── inline CSS (custom per sim shape)
+    ├── inline JS / Canvas / D3
+    └── methodology + citation footer
+```
+
+No build step. No framework. No backend. Each sim file is self-sufficient — clone the repo, open in a browser, it works. Vercel-deployed for free hosting + CDN.
+
+## what&apos;s live now (sample)
+
+**🇵🇭 Philippine systems** — EDSA traffic agent-based jam formation, The Big One (West Valley Fault 7.2M with district-level MMI from PHIVOLCS MMEIRS), Sabong math (bookmaker vig), jeepney modernization, party-list allocation, K-12 outcomes, Pasig River BOD/DO model, Manila sea-level rise.
+
+**Climate** — ocean acidification (pteropod/coral dissolution timeline 2026→2100 RCP 8.5), glacier retreat (SSP scenarios), coral bleaching (DHW model), typhoon intensity vs damage.
+
+**Probability** — Monty Hall, birthday paradox, Bayesian updating, Simpson&apos;s paradox, Death Note · probability of capture (Bayesian detective sim, three suspects in parallel, twelve evidence cards with per-suspect likelihood ratios).
+
+**Finance & cognition** — compound interest vs inflation (PH instruments), Peso buying power 1980→2026 (BSP CPI), startup runway, gambler&apos;s ruin, sunk-cost decision sim.
+
+**Fictional physics** — square-cube law (creature 0.1×–10× scale with femur stress meter and bone-shatter animation), spaghettification (Schwarzschild radius), rubber-arm verlet chain.
+
+## the differentiator
+
+Most analytics portfolios are Tableau screenshots and Power BI dashboards. Most explorables are charts-with-sliders. Mirastate sits in the gap between Bret-Victor-style explorables and serious climate sims, with a Filipino-rooted angle that no other explorables site has.
+
+That last part is the moat. Sea-level-rise for Manila barangays, fault-line scenarios on actual MMEIRS data, jeepney modernization with traditional-vs-e-jeep economics — these don&apos;t exist anywhere else as interactives. Distribution rides on per-sim launches into the specific communities that care about each one, not site-wide pushes.
+
+## what i learned
+
+Build velocity isn&apos;t the bottleneck once Claude Code is in the loop. The bottleneck is taste — which sims to build, in what order, with what visual idiom. The AI handles the typing; the human handles the choosing.
+
+Distribution per-sim beats distribution per-site. Each sim has its own audience and its own subreddit / community / press angle. A climate sim goes one place, a probability sim another, a PH culture sim a third. Site-wide launches are reserved for milestone moments (HN at sim-100).
+
+A citation footer is the cheapest way to upgrade a sim from &quot;cool&quot; to &quot;credible.&quot; Total cost: one extra paragraph at the bottom. Total value: the difference between something a recruiter screenshots and something they bookmark.
