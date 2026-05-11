@@ -1,7 +1,67 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Mockup } from "../Mockup";
 import { Flow } from "../Flow";
+
+function Select<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: { value: T; label: string }[];
+  onChange: (v: T) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    function onDoc(e: MouseEvent) {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, []);
+  const current = options.find((o) => o.value === value)?.label ?? value;
+  return (
+    <div className="block" ref={ref}>
+      <span className="text-[10.5px] text-muted">{label}</span>
+      <div className="relative mt-0.5">
+        <button
+          type="button"
+          onClick={() => setOpen((s) => !s)}
+          className="flex w-full items-center justify-between rounded border border-border bg-border/20 px-2 py-1 text-left text-foreground/90 hover:border-accent/40"
+        >
+          <span className="truncate">{current}</span>
+          <span className="ml-2 shrink-0 text-[9.5px] text-muted">▾</span>
+        </button>
+        {open && (
+          <ul className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-auto rounded border border-border bg-[#181715] py-1 shadow-lg shadow-black/40">
+            {options.map((o) => (
+              <li key={o.value}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange(o.value);
+                    setOpen(false);
+                  }}
+                  className={`block w-full px-2.5 py-1 text-left transition-colors ${
+                    o.value === value
+                      ? "bg-accent/15 text-accent"
+                      : "text-foreground/85 hover:bg-border/40"
+                  }`}
+                >
+                  {o.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}
 
 type Sector = "all" | "medical" | "retail" | "industrial" | "office";
 type State = "all" | "QLD" | "NSW" | "VIC" | "WA" | "SA";
@@ -120,47 +180,43 @@ export default function PropScoutDemo() {
       <Mockup title="propscout · 226 listings · 5 cities">
         <div className="mb-3 space-y-2">
           <div className="grid grid-cols-2 gap-2 text-[11.5px] sm:grid-cols-4">
-            <label className="block">
-              <span className="text-[10.5px] text-muted">sector</span>
-              <select
-                value={sector}
-                onChange={(e) => setSector(e.target.value as Sector)}
-                className="mt-0.5 w-full rounded border border-border bg-border/20 px-2 py-1 text-foreground"
-              >
-                <option value="all">all</option>
-                <option value="medical">medical / consulting</option>
-                <option value="retail">retail</option>
-                <option value="industrial">industrial</option>
-                <option value="office">office</option>
-              </select>
-            </label>
-            <label className="block">
-              <span className="text-[10.5px] text-muted">state</span>
-              <select
-                value={state}
-                onChange={(e) => setState(e.target.value as State)}
-                className="mt-0.5 w-full rounded border border-border bg-border/20 px-2 py-1 text-foreground"
-              >
-                <option value="all">all</option>
-                <option value="QLD">QLD</option>
-                <option value="NSW">NSW</option>
-                <option value="VIC">VIC</option>
-                <option value="WA">WA</option>
-                <option value="SA">SA</option>
-              </select>
-            </label>
-            <label className="block">
+            <Select<Sector>
+              label="sector"
+              value={sector}
+              onChange={setSector}
+              options={[
+                { value: "all", label: "all" },
+                { value: "medical", label: "medical / consulting" },
+                { value: "retail", label: "retail" },
+                { value: "industrial", label: "industrial" },
+                { value: "office", label: "office" },
+              ]}
+            />
+            <Select<State>
+              label="state"
+              value={state}
+              onChange={setState}
+              options={[
+                { value: "all", label: "all" },
+                { value: "QLD", label: "QLD" },
+                { value: "NSW", label: "NSW" },
+                { value: "VIC", label: "VIC" },
+                { value: "WA", label: "WA" },
+                { value: "SA", label: "SA" },
+              ]}
+            />
+            <div className="block">
               <span className="text-[10.5px] text-muted">price</span>
               <div className="mt-0.5 rounded border border-border bg-border/20 px-2 py-1 text-foreground/80">
                 $500k – $1.5M
               </div>
-            </label>
-            <label className="block">
+            </div>
+            <div className="block">
               <span className="text-[10.5px] text-muted">tenanted</span>
               <div className="mt-0.5 rounded border border-border bg-border/20 px-2 py-1 text-foreground/80">
                 ✓ leased
               </div>
-            </label>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 text-[11px]">
